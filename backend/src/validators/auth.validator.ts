@@ -33,6 +33,15 @@ export const forgotPasswordValidator = [
     .normalizeEmail(),
 ];
 
+export const resetPasswordValidator = [
+  body('token')
+    .trim()
+    .notEmpty().withMessage('Reset token is required'),
+  body('password')
+    .notEmpty().withMessage('Password is required')
+    .isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
+];
+
 export const updateProfileValidator = [
   body('name')
     .optional()

@@ -6,6 +6,8 @@ import { getInitials } from '../../utils';
 interface SidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
+  isMobileOpen: boolean;
+  onClose: () => void;
 }
 
 const navItems = [
@@ -38,14 +40,15 @@ const navItems = [
   },
 ];
 
-export const Sidebar = ({ isCollapsed, onToggle }: SidebarProps) => {
+export const Sidebar = ({ isCollapsed, onToggle, isMobileOpen, onClose }: SidebarProps) => {
   const { user, logout } = useAuth();
 
   return (
     <aside
       className={clsx(
         'fixed left-0 top-0 z-40 flex h-full flex-col border-r border-gray-200 bg-white/90 backdrop-blur transition-all duration-300 dark:border-gray-700 dark:bg-gray-900/95',
-        isCollapsed ? 'w-16' : 'w-64'
+        isMobileOpen ? 'w-72 translate-x-0 sm:w-80' : '-translate-x-full lg:translate-x-0',
+        isCollapsed ? 'lg:w-16' : 'lg:w-64'
       )}
     >
       {/* Logo */}
@@ -58,17 +61,30 @@ export const Sidebar = ({ isCollapsed, onToggle }: SidebarProps) => {
           </div>
           {!isCollapsed && <span className="truncate text-sm font-semibold text-gray-900 dark:text-white">Job Tracker Pro</span>}
         </div>
-        <button
-          onClick={onToggle}
-          className={clsx(
-            'ml-auto p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors',
-            isCollapsed && 'mx-auto'
-          )}
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isCollapsed ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'} />
-          </svg>
-        </button>
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300 lg:hidden"
+            aria-label="Close navigation"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={onToggle}
+            className={clsx(
+              'rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300',
+              isCollapsed && 'mx-auto'
+            )}
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isCollapsed ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'} />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Nav */}
@@ -77,6 +93,7 @@ export const Sidebar = ({ isCollapsed, onToggle }: SidebarProps) => {
           <NavLink
             key={item.to}
             to={item.to}
+            onClick={onClose}
             className={({ isActive }) =>
               clsx(
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',

@@ -47,3 +47,12 @@ export const forgotPassword = async (req: AuthRequest, res: Response): Promise<v
     sendError(res, err.message || 'Request failed', err.statusCode || 500);
   }
 };
+
+export const resetPassword = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const result = await authService.resetPassword(req.body.token, req.body.password);
+    sendSuccess(res, result);
+  } catch (err: any) {
+    sendError(res, err.message || 'Password reset failed', err.statusCode || 500);
+  }
+};

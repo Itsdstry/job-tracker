@@ -28,6 +28,23 @@ export const list = async (req: AuthRequest, res: Response): Promise<void> => {
   }
 };
 
+export const exportCsv = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const csv = await applicationService.exportApplications(req.userId!, {
+      status: req.query.status as any,
+      search: req.query.search as string,
+      sortBy: req.query.sortBy as string,
+      order: req.query.order as 'asc' | 'desc',
+    });
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="applications.csv"');
+    res.status(200).send(csv);
+  } catch (err: any) {
+    sendError(res, err.message, err.statusCode || 500);
+  }
+};
+
 export const getById = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const app = await applicationService.getApplicationById(req.userId!, req.params.id);

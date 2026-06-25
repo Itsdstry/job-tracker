@@ -13,6 +13,7 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/', listApplicationsValidator, validate, applicationController.list);
+router.get('/export', listApplicationsValidator, validate, applicationController.exportCsv);
 router.post('/', createApplicationValidator, validate, applicationController.create);
 router.get('/:id', applicationController.getById);
 router.put('/:id', updateApplicationValidator, validate, applicationController.update);

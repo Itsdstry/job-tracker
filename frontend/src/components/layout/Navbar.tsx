@@ -3,21 +3,37 @@ import { useTheme } from '../../context/ThemeContext';
 interface NavbarProps {
   sidebarWidth: number;
   title: string;
+  onMenuToggle: () => void;
+  isMobileView: boolean;
 }
 
-export const Navbar = ({ sidebarWidth, title }: NavbarProps) => {
+export const Navbar = ({ sidebarWidth, title, onMenuToggle, isMobileView }: NavbarProps) => {
   const { theme, toggleTheme } = useTheme();
 
   return (
     <header
-      className="fixed top-0 right-0 z-30 flex h-16 items-center border-b border-gray-200 bg-white/90 px-6 backdrop-blur dark:border-gray-700 dark:bg-gray-900/90"
-      style={{ left: sidebarWidth }}
+      className="fixed top-0 right-0 z-30 flex h-16 items-center border-b border-gray-200 bg-white/90 px-4 sm:px-6 backdrop-blur dark:border-gray-700 dark:bg-gray-900/90"
+      style={{ left: isMobileView ? 0 : sidebarWidth }}
     >
-      <div className="flex flex-1 items-center gap-3">
-        <div className="rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary-600 dark:bg-primary-900/30 dark:text-primary-400">
+      <div className="flex flex-1 items-center gap-2 sm:gap-3">
+        {isMobileView && (
+          <button
+            type="button"
+            onClick={onMenuToggle}
+            className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
+            aria-label="Open navigation menu"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        )}
+        <div className="rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 sm:hidden">
           {title}
         </div>
-        <h1 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h1>
+        <h1 className="truncate text-base font-semibold text-gray-900 dark:text-white sm:text-lg">
+          {title}
+        </h1>
       </div>
       <button
         onClick={toggleTheme}

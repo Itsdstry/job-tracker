@@ -76,6 +76,59 @@ export const listApplications = async (userId: string, query: ListApplicationsQu
   };
 };
 
+export const exportApplications = async (userId: string, query: ListApplicationsQuery) => {
+  const { status, search, sortBy = 'createdAt', order = 'desc' } = query;
+
+  const where: Prisma.ApplicationWhereInput = {
+    userId,
+    ...(status && { status }),
+    ...(search && {
+      OR: [
+        { company: { contains: search, mode: 'insensitive' } },
+        { position: { contains: search, mode: 'insensitive' } },
+        { location: { contains: search, mode: 'insensitive' } },
+      ],
+    }),
+  };
+
+  const validSortFields = ['applicationDate', 'company', 'position', 'createdAt', 'salary'];
+  const orderByField = validSortFields.includes(sortBy) ? sortBy : 'createdAt';
+
+  const applications = await prisma.application.findMany({
+    where,
+    orderBy: { [orderByField]: order },
+    select: {
+      company: true,
+      position: true,
+      status: true,
+      salary: true,
+      location: true,
+      applicationDate: true,
+      notes: true,
+      createdAt: true,
+    },
+  });
+
+  const headers = ['Company', 'Position', 'Status', 'Salary', 'Location', 'Application Date', 'Notes', 'Created At'];
+  const escapeCsvValue = (value: string | number | null | undefined) => {
+    const normalized = value === null || value === undefined ? '' : String(value);
+    return `"${normalized.replace(/"/g, '""')}"`;
+  };
+
+  const rows = applications.map((application) => [
+    application.company,
+    application.position,
+    application.status,
+    application.salary ?? '',
+    application.location ?? '',
+    application.applicationDate.toISOString(),
+    application.notes ?? '',
+    application.createdAt.toISOString(),
+  ].map(escapeCsvValue).join(','));
+
+  return [headers.join(','), ...rows].join('\n');
+};
+
 export const getApplicationById = async (userId: string, id: string) => {
   const app = await prisma.application.findFirst({ where: { id, userId } });
   if (!app) throw { statusCode: 404, message: 'Application not found' };

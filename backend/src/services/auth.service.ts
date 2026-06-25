@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from '../prisma/client';
 import { signToken } from '../utils/jwt';
+import { buildResetUrl, createResetToken, sendResetEmail } from '../utils/mail';
 
 export interface RegisterDto {
   name: string;
@@ -87,8 +88,45 @@ export const updateProfile = async (userId: string, dto: UpdateProfileDto) => {
 
 export const forgotPassword = async (email: string) => {
   const user = await prisma.user.findUnique({ where: { email } });
-  // Always return success to prevent email enumeration
   if (!user) return { message: 'If that email exists, a reset link has been sent' };
-  // In production: generate reset token, send email
+
+  const token = createResetToken();
+  const expiresAt = new Date(Date.now() + 1000 * 60 * 30);
+
+  await prisma.passwordResetToken.create({
+    data: {
+      token,
+      expiresAt,
+      userId: user.id,
+    },
+  });
+
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  const resetUrl = buildResetUrl(frontendUrl, token);
+  await sendResetEmail(user.email, resetUrl);
+
   return { message: 'If that email exists, a reset link has been sent' };
+};
+
+export const resetPassword = async (token: string, newPassword: string) => {
+  const resetToken = await prisma.passwordResetToken.findUnique({ where: { token } });
+  if (!resetToken) throw { statusCode: 400, message: 'Invalid or expired reset token' };
+  if (resetToken.used || resetToken.expiresAt < new Date()) {
+    throw { statusCode: 400, message: 'Invalid or expired reset token' };
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: resetToken.userId },
+      data: { password: hashedPassword },
+    }),
+    prisma.passwordResetToken.update({
+      where: { id: resetToken.id },
+      data: { used: true },
+    }),
+  ]);
+
+  return { message: 'Password reset successfully' };
 };

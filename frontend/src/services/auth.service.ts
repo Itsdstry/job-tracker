@@ -17,6 +17,11 @@ export const authService = {
     return res.data.data;
   },
 
+  resetPassword: async (token: string, password: string) => {
+    const res = await api.post<ApiResponse<{ message: string }>>('/auth/reset-password', { token, password });
+    return res.data.data;
+  },
+
   getProfile: async () => {
     const res = await api.get<ApiResponse<User>>('/auth/profile');
     return res.data.data;
