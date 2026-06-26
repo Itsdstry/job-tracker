@@ -43,7 +43,6 @@ export const useUpdateApplication = () => {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [APPLICATIONS_KEY] });
       qc.invalidateQueries({ queryKey: ['dashboard'] });
-      toast.success('Application updated!');
     },
     onError: (err: any) => {
       toast.error(err.response?.data?.message || 'Failed to update application');

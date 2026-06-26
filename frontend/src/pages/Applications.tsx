@@ -38,14 +38,23 @@ export const Applications = () => {
 
   const createMutation = useCreateApplication();
 
-  const { data, isLoading } = useApplications({
+  const commonParams = {
     search: search || undefined,
     status: (status as ApplicationStatus) || undefined,
     sortBy,
     order,
-    page,
-    limit: viewMode === 'kanban' ? 200 : 20,
-  });
+  };
+
+  const { data: tableData, isLoading: tableLoading } = useApplications(
+    { ...commonParams, page, limit: 20 },
+  );
+
+  const { data: kanbanData, isLoading: kanbanLoading } = useApplications(
+    { ...commonParams, page: 1, limit: 200 },
+  );
+
+  const data = viewMode === 'kanban' ? kanbanData : tableData;
+  const isLoading = viewMode === 'kanban' ? kanbanLoading : tableLoading;
 
   const handleCreate = (formData: ApplicationFormData) => {
     createMutation.mutate(formData, { onSuccess: () => setIsCreateOpen(false) });
