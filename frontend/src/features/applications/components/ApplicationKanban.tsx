@@ -69,20 +69,6 @@ export const ApplicationKanban = ({ applications, isLoading }: ApplicationKanban
     );
   }
 
-  if (applications.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="w-16 h-16 rounded-full bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center mb-4">
-          <svg className="w-8 h-8 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
-          </svg>
-        </div>
-        <p className="font-medium text-gray-900 dark:text-white">No applications to show</p>
-        <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">Add an application and it will appear here on the board</p>
-      </div>
-    );
-  }
-
   return (
     <div className="grid gap-4 xl:grid-cols-5">
       {columns.map((column) => (
