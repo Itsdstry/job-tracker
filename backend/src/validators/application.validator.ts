@@ -64,5 +64,5 @@ export const listApplicationsValidator = [
   query('sortBy').optional().isIn(['applicationDate', 'company', 'position', 'createdAt', 'salary']),
   query('order').optional().isIn(['asc', 'desc']),
   query('page').optional().isInt({ min: 1 }),
-  query('limit').optional().isInt({ min: 1, max: 100 }),
+  query('limit').optional().isInt({ min: 1, max: 500 }),
 ];
