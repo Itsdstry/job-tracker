@@ -1,6 +1,9 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import axios from 'axios';
 import { User } from '../types';
 import { setApiAccessToken } from '../services/api';
+
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 interface AuthContextValue {
   user: User | null;
@@ -21,11 +24,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const storedRefreshToken = localStorage.getItem('refreshToken');
-    if (storedUser && storedRefreshToken) {
-      setUser(JSON.parse(storedUser));
-      setHasSession(true);
+
+    if (!storedUser || !storedRefreshToken) {
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
+
+    // Eagerly refresh on page load so access token is ready before queries fire
+    axios
+      .post(`${BASE_URL}/auth/refresh`, { refreshToken: storedRefreshToken })
+      .then((res) => {
+        const { accessToken, refreshToken: newRefreshToken } = res.data.data;
+        setApiAccessToken(accessToken);
+        localStorage.setItem('refreshToken', newRefreshToken);
+        setUser(JSON.parse(storedUser));
+        setHasSession(true);
+      })
+      .catch(() => {
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const login = (newAccessToken: string, newRefreshToken: string, newUser: User) => {
@@ -39,7 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     const refreshToken = localStorage.getItem('refreshToken');
     if (refreshToken) {
-      fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
+      fetch(`${BASE_URL}/auth/logout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken }),

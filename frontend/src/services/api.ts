@@ -46,6 +46,7 @@ api.interceptors.response.use(
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
       }).then((token) => {
+        original.headers = original.headers || {};
         original.headers.Authorization = `Bearer ${token}`;
         return api(original);
       });
