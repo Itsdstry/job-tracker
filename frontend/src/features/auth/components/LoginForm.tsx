@@ -28,7 +28,7 @@ export const LoginForm = () => {
     setIsLoading(true);
     try {
       const data = await authService.login(form);
-      login(data.token, data.user);
+      login(data.accessToken, data.refreshToken, data.user);
       toast.success(`Welcome back, ${data.user.name}!`);
       navigate('/dashboard');
     } catch (err: any) {

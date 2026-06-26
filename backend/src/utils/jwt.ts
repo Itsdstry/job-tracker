@@ -1,17 +1,27 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+const ACCESS_SECRET = process.env.JWT_SECRET || 'fallback-secret';
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret';
 
 export interface JwtPayload {
   userId: string;
   email: string;
 }
 
-export const signToken = (payload: JwtPayload): string => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN } as jwt.SignOptions);
+export const signAccessToken = (payload: JwtPayload): string => {
+  return jwt.sign(payload, ACCESS_SECRET, { expiresIn: '15m' } as jwt.SignOptions);
+};
+
+export const signRefreshToken = (payload: JwtPayload): string => {
+  return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '7d' } as jwt.SignOptions);
 };
 
 export const verifyToken = (token: string): JwtPayload => {
-  return jwt.verify(token, JWT_SECRET) as JwtPayload;
+  return jwt.verify(token, ACCESS_SECRET) as JwtPayload;
 };
+
+export const verifyRefreshToken = (token: string): JwtPayload => {
+  return jwt.verify(token, REFRESH_SECRET) as JwtPayload;
+};
+
+export const signToken = signAccessToken;

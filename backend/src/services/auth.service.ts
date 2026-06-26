@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { prisma } from '../prisma/client';
-import { signToken } from '../utils/jwt';
+import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt';
 import { buildResetUrl, createResetToken, sendResetEmail } from '../utils/mail';
 
 export interface RegisterDto {
@@ -22,6 +23,21 @@ export interface UpdateProfileDto {
 
 const SALT_ROUNDS = 12;
 
+const createTokenPair = async (userId: string, email: string) => {
+  const accessToken = signAccessToken({ userId, email });
+  const refreshToken = signRefreshToken({ userId, email });
+
+  await prisma.refreshToken.create({
+    data: {
+      token: crypto.createHash('sha256').update(refreshToken).digest('hex'),
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      userId,
+    },
+  });
+
+  return { accessToken, refreshToken };
+};
+
 export const register = async (dto: RegisterDto) => {
   const existing = await prisma.user.findUnique({ where: { email: dto.email } });
   if (existing) throw { statusCode: 409, message: 'Email already in use' };
@@ -32,8 +48,8 @@ export const register = async (dto: RegisterDto) => {
     select: { id: true, name: true, email: true, createdAt: true },
   });
 
-  const token = signToken({ userId: user.id, email: user.email });
-  return { user, token };
+  const tokens = await createTokenPair(user.id, user.email);
+  return { user, ...tokens };
 };
 
 export const login = async (dto: LoginDto) => {
@@ -43,9 +59,42 @@ export const login = async (dto: LoginDto) => {
   const valid = await bcrypt.compare(dto.password, user.password);
   if (!valid) throw { statusCode: 401, message: 'Invalid credentials' };
 
-  const token = signToken({ userId: user.id, email: user.email });
   const { password: _, ...safeUser } = user;
-  return { user: safeUser, token };
+  const tokens = await createTokenPair(user.id, user.email);
+  return { user: safeUser, ...tokens };
+};
+
+export const refresh = async (refreshToken: string) => {
+  let payload;
+  try {
+    payload = verifyRefreshToken(refreshToken);
+  } catch {
+    throw { statusCode: 401, message: 'Invalid or expired refresh token' };
+  }
+
+  const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex');
+  const stored = await prisma.refreshToken.findUnique({ where: { token: tokenHash } });
+
+  if (!stored || stored.revoked || stored.expiresAt < new Date()) {
+    throw { statusCode: 401, message: 'Invalid or expired refresh token' };
+  }
+
+  await prisma.refreshToken.update({ where: { id: stored.id }, data: { revoked: true } });
+
+  const user = await prisma.user.findUnique({ where: { id: payload.userId } });
+  if (!user) throw { statusCode: 401, message: 'User not found' };
+
+  const tokens = await createTokenPair(user.id, user.email);
+  return tokens;
+};
+
+export const logout = async (refreshToken: string) => {
+  const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex');
+  await prisma.refreshToken.updateMany({
+    where: { token: tokenHash },
+    data: { revoked: true },
+  });
+  return { message: 'Logged out successfully' };
 };
 
 export const getProfile = async (userId: string) => {
@@ -94,11 +143,7 @@ export const forgotPassword = async (email: string) => {
   const expiresAt = new Date(Date.now() + 1000 * 60 * 30);
 
   await prisma.passwordResetToken.create({
-    data: {
-      token,
-      expiresAt,
-      userId: user.id,
-    },
+    data: { token, expiresAt, userId: user.id },
   });
 
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';

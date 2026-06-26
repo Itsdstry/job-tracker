@@ -21,6 +21,27 @@ export const login = async (req: AuthRequest, res: Response): Promise<void> => {
   }
 };
 
+export const refresh = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) { sendError(res, 'Refresh token required', 400); return; }
+    const result = await authService.refresh(refreshToken);
+    sendSuccess(res, result);
+  } catch (err: any) {
+    sendError(res, err.message || 'Token refresh failed', err.statusCode || 401);
+  }
+};
+
+export const logout = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { refreshToken } = req.body;
+    if (refreshToken) await authService.logout(refreshToken);
+    sendSuccess(res, null, 'Logged out successfully');
+  } catch (err: any) {
+    sendError(res, err.message || 'Logout failed', err.statusCode || 500);
+  }
+};
+
 export const getProfile = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const profile = await authService.getProfile(req.userId!);

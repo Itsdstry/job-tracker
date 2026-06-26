@@ -29,7 +29,7 @@ export const RegisterForm = () => {
     setIsLoading(true);
     try {
       const data = await authService.register(form);
-      login(data.token, data.user);
+      login(data.accessToken, data.refreshToken, data.user);
       toast.success('Account created! Welcome aboard.');
       navigate('/dashboard');
     } catch (err: any) {
