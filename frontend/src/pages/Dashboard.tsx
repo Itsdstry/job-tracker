@@ -105,6 +105,30 @@ export const Dashboard = () => {
         </div>
       )}
 
+      {/* Empty state — no applications yet */}
+      {!statsLoading && stats?.total === 0 && (
+        <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 py-20 px-6 text-center">
+          <div className="w-20 h-20 rounded-full bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center mb-5">
+            <svg className="w-10 h-10 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Start tracking your job search</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6">
+            Add your first application and your dashboard will come to life with charts, stats, and progress tracking.
+          </p>
+          <Link
+            to="/applications"
+            className="inline-flex items-center gap-2 rounded-full bg-primary-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-primary-700 transition"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add your first application
+          </Link>
+        </div>
+      )}
+
       {/* Charts row 1 */}
       {chartsLoading ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -112,7 +136,7 @@ export const Dashboard = () => {
             <div key={i} className="h-64 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />
           ))}
         </div>
-      ) : charts ? (
+      ) : charts && (stats?.total ?? 0) > 0 ? (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2">

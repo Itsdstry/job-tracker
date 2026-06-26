@@ -153,7 +153,7 @@ export const Applications = () => {
           </div>
         ) : (
           <>
-            <ApplicationTable applications={data?.applications ?? []} isLoading={isLoading} />
+            <ApplicationTable applications={data?.applications ?? []} isLoading={isLoading} hasActiveFilters={!!(search || status)} />
 
             {data && data.pagination.totalPages > 1 && (
               <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-gray-800">

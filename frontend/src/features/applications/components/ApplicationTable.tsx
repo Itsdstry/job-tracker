@@ -11,9 +11,10 @@ import { formatDate, formatSalary } from '../../../utils';
 interface ApplicationTableProps {
   applications: Application[];
   isLoading?: boolean;
+  hasActiveFilters?: boolean;
 }
 
-export const ApplicationTable = ({ applications, isLoading }: ApplicationTableProps) => {
+export const ApplicationTable = ({ applications, isLoading, hasActiveFilters }: ApplicationTableProps) => {
   const navigate = useNavigate();
   const [editingApp, setEditingApp] = useState<Application | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -32,12 +33,22 @@ export const ApplicationTable = ({ applications, isLoading }: ApplicationTablePr
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
-          <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
+          {hasActiveFilters ? (
+            <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          ) : (
+            <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          )}
         </div>
-        <p className="text-gray-500 dark:text-gray-400 font-medium">No applications yet</p>
-        <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Add your first job application to get started</p>
+        <p className="text-gray-500 dark:text-gray-400 font-medium">
+          {hasActiveFilters ? 'No results match your filters' : 'No applications yet'}
+        </p>
+        <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+          {hasActiveFilters ? 'Try adjusting your search or clearing the filters' : 'Add your first job application to get started'}
+        </p>
       </div>
     );
   }

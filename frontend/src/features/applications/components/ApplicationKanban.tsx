@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import clsx from 'clsx';
+import toast from 'react-hot-toast';
 import { useUpdateApplication } from '../hooks/useApplications';
 import { Application, ApplicationStatus } from '../../../types';
 import { formatDate, formatSalary } from '../../../utils';
@@ -39,7 +40,14 @@ export const ApplicationKanban = ({ applications, isLoading }: ApplicationKanban
       return;
     }
 
-    updateMutation.mutate({ id: draggedId, data: { status } });
+    const statusLabel = columns.find((c) => c.key === status)?.title ?? status;
+    updateMutation.mutate(
+      { id: draggedId, data: { status } },
+      {
+        onSuccess: () => toast.success(`Moved to ${statusLabel}`),
+        onError: () => toast.error('Failed to update status'),
+      }
+    );
     setDraggedId(null);
     setDragOverColumn(null);
   };
@@ -57,6 +65,20 @@ export const ApplicationKanban = ({ applications, isLoading }: ApplicationKanban
             </div>
           </div>
         ))}
+      </div>
+    );
+  }
+
+  if (applications.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="w-16 h-16 rounded-full bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center mb-4">
+          <svg className="w-8 h-8 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+          </svg>
+        </div>
+        <p className="font-medium text-gray-900 dark:text-white">No applications to show</p>
+        <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">Add an application and it will appear here on the board</p>
       </div>
     );
   }
@@ -98,7 +120,11 @@ export const ApplicationKanban = ({ applications, isLoading }: ApplicationKanban
                   key={application.id}
                   draggable
                   onDragStart={() => setDraggedId(application.id)}
-                  className="cursor-grab rounded-xl border border-gray-200 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                  onDragEnd={() => setDraggedId(null)}
+                  className={clsx(
+                    'cursor-grab rounded-xl border border-gray-200 bg-white p-3 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-700 dark:bg-gray-800',
+                    draggedId === application.id && 'opacity-40 scale-95'
+                  )}
                 >
                   <div>
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">{application.company}</p>
