@@ -13,8 +13,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(helmet());
+const allowedOrigin = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: allowedOrigin,
   credentials: true,
 }));
 app.use(morgan('dev'));
