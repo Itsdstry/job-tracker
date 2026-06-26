@@ -46,6 +46,10 @@ model Application {
   userId          String
   user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
+  @@index([userId, status])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, applicationDate(sort: Desc)])
   @@map("applications")
 }
 
