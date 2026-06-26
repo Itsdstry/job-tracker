@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
+import logger from './logger';
 
 export const createResetToken = () => crypto.randomBytes(32).toString('hex');
 
@@ -17,9 +18,7 @@ const transporter = nodemailer.createTransport({
 
 export const sendResetEmail = async (to: string, resetUrl: string) => {
   if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.warn('[MAIL] SMTP credentials are not configured. Skipping email delivery.');
-    console.log(`[MAIL] To: ${to}`);
-    console.log(`[MAIL] Reset URL: ${resetUrl}`);
+    logger.warn({ to, resetUrl }, 'SMTP not configured — skipping email delivery');
     return true;
   }
 
