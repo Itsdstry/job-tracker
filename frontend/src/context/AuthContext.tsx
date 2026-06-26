@@ -4,7 +4,6 @@ import { setApiAccessToken } from '../services/api';
 
 interface AuthContextValue {
   user: User | null;
-  accessToken: string | null;
   login: (accessToken: string, refreshToken: string, user: User) => void;
   logout: () => void;
   updateUser: (user: User) => void;
@@ -16,7 +15,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [hasSession, setHasSession] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -24,20 +23,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const storedRefreshToken = localStorage.getItem('refreshToken');
     if (storedUser && storedRefreshToken) {
       setUser(JSON.parse(storedUser));
-      // access token will be obtained on first 401 via the refresh interceptor
+      setHasSession(true);
     }
     setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    setApiAccessToken(accessToken);
-  }, [accessToken]);
-
   const login = (newAccessToken: string, newRefreshToken: string, newUser: User) => {
     localStorage.setItem('refreshToken', newRefreshToken);
     localStorage.setItem('user', JSON.stringify(newUser));
-    setAccessToken(newAccessToken);
+    setApiAccessToken(newAccessToken);
     setUser(newUser);
+    setHasSession(true);
   };
 
   const logout = () => {
@@ -52,8 +48,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     setApiAccessToken(null);
-    setAccessToken(null);
     setUser(null);
+    setHasSession(false);
   };
 
   const updateUser = (updatedUser: User) => {
@@ -65,11 +61,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
-        accessToken,
         login,
         logout,
         updateUser,
-        isAuthenticated: !!user && (!!accessToken || !!localStorage.getItem('refreshToken')),
+        isAuthenticated: !!user && hasSession,
         isLoading,
       }}
     >
