@@ -11,7 +11,6 @@ import dashboardRoutes from './routes/dashboard.routes';
 import { errorHandler, notFound } from './middlewares/error.middleware';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
 app.use(helmet());
 const allowedOrigin = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
@@ -35,12 +34,13 @@ app.use(pinoHttp({
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Too many requests from this IP, please try again later.',
-});
-app.use('/api', limiter);
+if (process.env.NODE_ENV !== 'test') {
+  app.use('/api', rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    message: 'Too many requests from this IP, please try again later.',
+  }));
+}
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
@@ -52,9 +52,5 @@ app.use('/api/dashboard', dashboardRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
-
-app.listen(PORT, () => {
-  logger.info({ port: PORT, env: process.env.NODE_ENV || 'development' }, 'Server started');
-});
 
 export default app;
