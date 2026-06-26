@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { prisma } from '../prisma/client';
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt';
 import { buildResetUrl, createResetToken, sendResetEmail } from '../utils/mail';
+import logger from '../utils/logger';
 
 export interface RegisterDto {
   name: string;
@@ -48,17 +49,25 @@ export const register = async (dto: RegisterDto) => {
     select: { id: true, name: true, email: true, createdAt: true },
   });
 
+  logger.info({ userId: user.id, email: user.email }, 'User registered');
   const tokens = await createTokenPair(user.id, user.email);
   return { user, ...tokens };
 };
 
 export const login = async (dto: LoginDto) => {
   const user = await prisma.user.findUnique({ where: { email: dto.email } });
-  if (!user) throw { statusCode: 401, message: 'Invalid credentials' };
+  if (!user) {
+    logger.warn({ email: dto.email }, 'Login failed: user not found');
+    throw { statusCode: 401, message: 'Invalid credentials' };
+  }
 
   const valid = await bcrypt.compare(dto.password, user.password);
-  if (!valid) throw { statusCode: 401, message: 'Invalid credentials' };
+  if (!valid) {
+    logger.warn({ userId: user.id, email: user.email }, 'Login failed: wrong password');
+    throw { statusCode: 401, message: 'Invalid credentials' };
+  }
 
+  logger.info({ userId: user.id, email: user.email }, 'User logged in');
   const { password: _, ...safeUser } = user;
   const tokens = await createTokenPair(user.id, user.email);
   return { user: safeUser, ...tokens };

@@ -1,9 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import morgan from 'morgan';
+import pinoHttp from 'pino-http';
 import rateLimit from 'express-rate-limit';
 
+import logger from './utils/logger';
 import authRoutes from './routes/auth.routes';
 import applicationRoutes from './routes/application.routes';
 import dashboardRoutes from './routes/dashboard.routes';
@@ -18,7 +19,19 @@ app.use(cors({
   origin: allowedOrigin,
   credentials: true,
 }));
-app.use(morgan('dev'));
+
+app.use(pinoHttp({
+  logger,
+  customLogLevel: (_req, res) => {
+    if (res.statusCode >= 500) return 'error';
+    if (res.statusCode >= 400) return 'warn';
+    return 'info';
+  },
+  customSuccessMessage: (req, res) => `${req.method} ${req.url} ${res.statusCode}`,
+  customErrorMessage: (_req, res, err) => `Request failed with status ${res.statusCode}: ${err.message}`,
+  redact: ['req.headers.authorization', 'req.body.password', 'req.body.currentPassword', 'req.body.newPassword'],
+}));
+
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -41,7 +54,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+  logger.info({ port: PORT, env: process.env.NODE_ENV || 'development' }, 'Server started');
 });
 
 export default app;
