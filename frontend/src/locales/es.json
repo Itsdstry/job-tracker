@@ -1,0 +1,217 @@
+{
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "add": "Añadir",
+    "back": "← Volver",
+    "loading": "Cargando...",
+    "search": "Buscar",
+    "export": "Exportar CSV",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "na": "—"
+  },
+  "nav": {
+    "dashboard": "Inicio",
+    "applications": "Candidaturas",
+    "profile": "Perfil",
+    "logout": "Cerrar sesión",
+    "toggleTheme": "Cambiar tema",
+    "toggleLanguage": "Idioma"
+  },
+  "auth": {
+    "login": {
+      "title": "Inicia sesión en tu cuenta",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "signIn": "Iniciar sesión",
+      "noAccount": "¿No tienes cuenta?",
+      "signUp": "Regístrate",
+      "welcome": "¡Bienvenido de nuevo, {{name}}!"
+    },
+    "register": {
+      "title": "Crea tu cuenta gratuita",
+      "fullName": "Nombre completo",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "passwordHint": "Al menos 8 caracteres",
+      "createAccount": "Crear cuenta",
+      "hasAccount": "¿Ya tienes cuenta?",
+      "signIn": "Inicia sesión",
+      "created": "¡Cuenta creada! Bienvenido a bordo.",
+      "errors": {
+        "nameMin": "El nombre debe tener al menos 2 caracteres",
+        "emailInvalid": "Correo electrónico inválido",
+        "passwordMin": "La contraseña debe tener al menos 8 caracteres"
+      }
+    },
+    "forgotPassword": {
+      "title": "Restablecer contraseña",
+      "description": "Introduce tu correo y te enviaremos un enlace para restablecerla.",
+      "send": "Enviar enlace",
+      "backToLogin": "Volver al inicio de sesión",
+      "success": "Si ese correo existe en nuestro sistema, recibirás un enlace en breve."
+    },
+    "resetPassword": {
+      "title": "Establece una nueva contraseña",
+      "description": "Elige una nueva contraseña para tu cuenta.",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "passwordHint": "Mín. 8 caracteres",
+      "update": "Actualizar contraseña",
+      "backToLogin": "Volver al inicio de sesión",
+      "success": "Tu contraseña se actualizó correctamente.",
+      "errors": {
+        "passwordMin": "La contraseña debe tener al menos 8 caracteres",
+        "passwordsMustMatch": "Las contraseñas deben coincidir",
+        "invalidToken": "Token de restablecimiento inválido o expirado"
+      }
+    }
+  },
+  "dashboard": {
+    "label": "JOB TRACKER PRO",
+    "welcome": "Bienvenido de nuevo, {{name}} 👋",
+    "description": "Organiza cada oportunidad, visualiza tu progreso y mantente preparado para la próxima entrevista.",
+    "trackApplications": "Ver candidaturas",
+    "momentum": "Progreso",
+    "interviews": "Entrevistas",
+    "offers": "Ofertas",
+    "tracked": "registradas",
+    "active": "activas",
+    "inMotion": "en curso",
+    "totalApplications": "Total candidaturas",
+    "interviewRate": "{{rate}}% tasa de entrevistas",
+    "offerRate": "{{rate}}% tasa de ofertas",
+    "rejections": "Rechazos",
+    "empty": {
+      "title": "Empieza a rastrear tu búsqueda de empleo",
+      "description": "Añade tu primera candidatura y el panel cobrará vida con gráficos, estadísticas y seguimiento del progreso.",
+      "button": "Añade tu primera candidatura"
+    },
+    "charts": {
+      "monthly": "Candidaturas por mes",
+      "status": "Distribución por estado",
+      "topCompanies": "Empresas principales",
+      "salary": "Distribución salarial",
+      "noData": "Sin datos aún",
+      "applications": "Candidaturas",
+      "app": "candidatura",
+      "apps": "candidaturas"
+    }
+  },
+  "applications": {
+    "label": "CANDIDATURAS",
+    "title": "Rastrea cada oportunidad con claridad",
+    "description": "Añade nuevas candidaturas, refina tu lista y mantén el control de entrevistas y ofertas desde un solo lugar.",
+    "addApplication": "+ Añadir candidatura",
+    "search": {
+      "placeholder": "Buscar por empresa, puesto, ubicación..."
+    },
+    "views": {
+      "kanban": "Kanban",
+      "table": "Tabla"
+    },
+    "filters": {
+      "allStatuses": "Todos los estados"
+    },
+    "sort": {
+      "dateAdded": "Fecha de añadido",
+      "applicationDate": "Fecha de candidatura",
+      "company": "Empresa",
+      "position": "Puesto",
+      "salary": "Salario",
+      "ascending": "Orden ascendente",
+      "descending": "Orden descendente"
+    },
+    "table": {
+      "company": "Empresa",
+      "position": "Puesto",
+      "location": "Ubicación",
+      "salary": "Salario",
+      "date": "Fecha",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "kanban": {
+      "applied": "Candidaturas",
+      "appliedDesc": "Oportunidades nuevas",
+      "interview": "Entrevista",
+      "interviewDesc": "En conversación",
+      "technicalTest": "Prueba técnica",
+      "technicalTestDesc": "Evaluaciones",
+      "offer": "Oferta",
+      "offerDesc": "Señales positivas",
+      "rejected": "Rechazado",
+      "rejectedDesc": "Cerradas",
+      "dropHere": "Soltar aquí"
+    },
+    "empty": {
+      "noResults": "No hay resultados para tus filtros",
+      "noResultsDesc": "Prueba a ajustar la búsqueda o eliminar los filtros",
+      "noApplications": "Aún no hay candidaturas",
+      "noApplicationsDesc": "Añade tu primera candidatura para empezar"
+    },
+    "pagination": {
+      "showing": "Mostrando {{from}}–{{to}} de {{total}}"
+    },
+    "appliedOn": "Aplicado {{date}}"
+  },
+  "applicationForm": {
+    "newTitle": "Nueva candidatura",
+    "editTitle": "Editar candidatura",
+    "company": "Empresa",
+    "position": "Puesto",
+    "salary": "Salario (USD)",
+    "location": "Ubicación",
+    "applicationDate": "Fecha de candidatura",
+    "status": "Estado",
+    "notes": "Notas",
+    "placeholders": {
+      "company": "Google",
+      "position": "Ingeniero de software",
+      "salary": "75000",
+      "location": "Remoto / Madrid",
+      "notes": "Notas de entrevista, contactos, próximos pasos..."
+    },
+    "addApplication": "Añadir candidatura",
+    "saveChanges": "Guardar cambios",
+    "errors": {
+      "companyRequired": "La empresa es obligatoria",
+      "positionRequired": "El puesto es obligatorio",
+      "invalidSalary": "Salario inválido"
+    }
+  },
+  "applicationDetail": {
+    "location": "Ubicación",
+    "salary": "Salario",
+    "applied": "Aplicado",
+    "added": "Añadido",
+    "notes": "Notas",
+    "deleteConfirm": "¿Seguro que quieres eliminar esta candidatura? Esta acción no se puede deshacer.",
+    "deleted": "Candidatura eliminada",
+    "updated": "Candidatura actualizada"
+  },
+  "profile": {
+    "title": "Perfil",
+    "memberSince": "Miembro desde {{date}}",
+    "applicationsCount": "{{count}} candidaturas",
+    "updateName": "Actualizar nombre",
+    "newName": "Nuevo nombre",
+    "saveName": "Guardar nombre",
+    "changePassword": "Cambiar contraseña",
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "passwordHint": "Al menos 8 caracteres",
+    "updated": "¡Perfil actualizado!"
+  },
+  "status": {
+    "Applied": "Candidatura",
+    "Interview": "Entrevista",
+    "TechnicalTest": "Prueba técnica",
+    "Offer": "Oferta",
+    "Rejected": "Rechazado"
+  }
+}

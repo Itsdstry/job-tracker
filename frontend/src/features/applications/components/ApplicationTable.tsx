@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Application } from '../../../types';
 import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
@@ -16,6 +17,7 @@ interface ApplicationTableProps {
 
 export const ApplicationTable = ({ applications, isLoading, hasActiveFilters }: ApplicationTableProps) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [editingApp, setEditingApp] = useState<Application | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const updateMutation = useUpdateApplication();
@@ -44,14 +46,24 @@ export const ApplicationTable = ({ applications, isLoading, hasActiveFilters }: 
           )}
         </div>
         <p className="text-gray-500 dark:text-gray-400 font-medium">
-          {hasActiveFilters ? 'No results match your filters' : 'No applications yet'}
+          {hasActiveFilters ? t('applications.empty.noResults') : t('applications.empty.noApplications')}
         </p>
         <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-          {hasActiveFilters ? 'Try adjusting your search or clearing the filters' : 'Add your first job application to get started'}
+          {hasActiveFilters ? t('applications.empty.noResultsDesc') : t('applications.empty.noApplicationsDesc')}
         </p>
       </div>
     );
   }
+
+  const headers = [
+    t('applications.table.company'),
+    t('applications.table.position'),
+    t('applications.table.location'),
+    t('applications.table.salary'),
+    t('applications.table.date'),
+    t('applications.table.status'),
+    t('applications.table.actions'),
+  ];
 
   return (
     <>
@@ -59,7 +71,7 @@ export const ApplicationTable = ({ applications, isLoading, hasActiveFilters }: 
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200 dark:border-gray-700">
-              {['Company', 'Position', 'Location', 'Salary', 'Date', 'Status', 'Actions'].map((h) => (
+              {headers.map((h) => (
                 <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                   {h}
                 </th>
@@ -75,7 +87,7 @@ export const ApplicationTable = ({ applications, isLoading, hasActiveFilters }: 
               >
                 <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{app.company}</td>
                 <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{app.position}</td>
-                <td className="px-4 py-3 text-gray-500 dark:text-gray-400">{app.location || '—'}</td>
+                <td className="px-4 py-3 text-gray-500 dark:text-gray-400">{app.location || t('common.na')}</td>
                 <td className="px-4 py-3 text-gray-500 dark:text-gray-400">{formatSalary(app.salary)}</td>
                 <td className="px-4 py-3 text-gray-500 dark:text-gray-400">{formatDate(app.applicationDate)}</td>
                 <td className="px-4 py-3">
@@ -83,12 +95,7 @@ export const ApplicationTable = ({ applications, isLoading, hasActiveFilters }: 
                 </td>
                 <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setEditingApp(app)}
-                      aria-label="Edit"
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setEditingApp(app)} aria-label={t('common.edit')}>
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
@@ -97,7 +104,7 @@ export const ApplicationTable = ({ applications, isLoading, hasActiveFilters }: 
                       variant="ghost"
                       size="sm"
                       onClick={() => setDeletingId(app.id)}
-                      aria-label="Delete"
+                      aria-label={t('common.delete')}
                       className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -112,13 +119,7 @@ export const ApplicationTable = ({ applications, isLoading, hasActiveFilters }: 
         </table>
       </div>
 
-      {/* Edit Modal */}
-      <Modal
-        isOpen={!!editingApp}
-        onClose={() => setEditingApp(null)}
-        title="Edit Application"
-        size="lg"
-      >
+      <Modal isOpen={!!editingApp} onClose={() => setEditingApp(null)} title={t('applicationForm.editTitle')} size="lg">
         {editingApp && (
           <ApplicationForm
             initialData={editingApp}
@@ -134,18 +135,12 @@ export const ApplicationTable = ({ applications, isLoading, hasActiveFilters }: 
         )}
       </Modal>
 
-      {/* Delete Confirm Modal */}
-      <Modal
-        isOpen={!!deletingId}
-        onClose={() => setDeletingId(null)}
-        title="Delete Application"
-        size="sm"
-      >
+      <Modal isOpen={!!deletingId} onClose={() => setDeletingId(null)} title={t('common.delete')} size="sm">
         <p className="text-gray-600 dark:text-gray-400 mb-6">
-          Are you sure you want to delete this application? This action cannot be undone.
+          {t('applicationDetail.deleteConfirm')}
         </p>
         <div className="flex justify-end gap-3">
-          <Button variant="secondary" onClick={() => setDeletingId(null)}>Cancel</Button>
+          <Button variant="secondary" onClick={() => setDeletingId(null)}>{t('common.cancel')}</Button>
           <Button
             variant="danger"
             isLoading={deleteMutation.isPending}
@@ -155,7 +150,7 @@ export const ApplicationTable = ({ applications, isLoading, hasActiveFilters }: 
               }
             }}
           >
-            Delete
+            {t('common.delete')}
           </Button>
         </div>
       </Modal>

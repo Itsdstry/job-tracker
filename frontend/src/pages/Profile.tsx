@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { authService } from '../services/auth.service';
 import { useAuth } from '../context/AuthContext';
@@ -9,6 +10,7 @@ import { Button } from '../components/ui/Button';
 import { formatDate, getInitials } from '../utils';
 
 export const Profile = () => {
+  const { t } = useTranslation();
   const { updateUser } = useAuth();
   const qc = useQueryClient();
 
@@ -25,7 +27,7 @@ export const Profile = () => {
     onSuccess: (updated) => {
       updateUser(updated);
       qc.invalidateQueries({ queryKey: ['profile'] });
-      toast.success('Profile updated!');
+      toast.success(t('profile.updated'));
       setNameForm({ name: '' });
       setPwForm({ currentPassword: '', newPassword: '' });
     },
@@ -54,21 +56,21 @@ export const Profile = () => {
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">{profile?.name}</h2>
             <p className="text-gray-500 dark:text-gray-400 text-sm">{profile?.email}</p>
             <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">
-              Member since {profile ? formatDate(profile.createdAt) : '—'}
+              {t('profile.memberSince', { date: profile ? formatDate(profile.createdAt) : '—' })}
             </p>
           </div>
           <div className="ml-auto text-right">
             <p className="text-2xl font-bold text-primary-600 dark:text-primary-400">
               {profile?._count?.applications ?? 0}
             </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Applications</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{t('nav.applications')}</p>
           </div>
         </div>
       </Card>
 
       {/* Update name */}
       <Card>
-        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">Update Name</h3>
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">{t('profile.updateName')}</h3>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -77,14 +79,14 @@ export const Profile = () => {
           className="space-y-4"
         >
           <Input
-            label="New Name"
+            label={t('profile.newName')}
             placeholder={profile?.name}
             value={nameForm.name}
             onChange={(e) => setNameForm({ name: e.target.value })}
           />
           <div className="flex justify-end">
             <Button type="submit" isLoading={updateMutation.isPending} disabled={!nameForm.name}>
-              Save Name
+              {t('profile.saveName')}
             </Button>
           </div>
         </form>
@@ -92,7 +94,7 @@ export const Profile = () => {
 
       {/* Change password */}
       <Card>
-        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">Change Password</h3>
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">{t('profile.changePassword')}</h3>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -103,18 +105,18 @@ export const Profile = () => {
           className="space-y-4"
         >
           <Input
-            label="Current Password"
+            label={t('profile.currentPassword')}
             type="password"
             value={pwForm.currentPassword}
             onChange={(e) => setPwForm((f) => ({ ...f, currentPassword: e.target.value }))}
             autoComplete="current-password"
           />
           <Input
-            label="New Password"
+            label={t('profile.newPassword')}
             type="password"
             value={pwForm.newPassword}
             onChange={(e) => setPwForm((f) => ({ ...f, newPassword: e.target.value }))}
-            hint="At least 8 characters"
+            hint={t('profile.passwordHint')}
             autoComplete="new-password"
           />
           <div className="flex justify-end">
@@ -123,7 +125,7 @@ export const Profile = () => {
               isLoading={updateMutation.isPending}
               disabled={!pwForm.currentPassword || !pwForm.newPassword}
             >
-              Change Password
+              {t('profile.changePassword')}
             </Button>
           </div>
         </form>

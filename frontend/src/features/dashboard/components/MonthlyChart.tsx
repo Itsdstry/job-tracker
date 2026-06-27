@@ -7,6 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 import { MonthlyData } from '../../../types';
 import { formatMonth } from '../../../utils';
 import { Card } from '../../../components/ui/Card';
@@ -16,12 +17,13 @@ interface MonthlyChartProps {
 }
 
 export const MonthlyChart = ({ data }: MonthlyChartProps) => {
+  const { t } = useTranslation();
   const chartData = data.map((d) => ({ ...d, label: formatMonth(d.month) }));
 
   return (
     <Card>
       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">
-        Applications Per Month
+        {t('dashboard.charts.monthly')}
       </h3>
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
@@ -47,7 +49,7 @@ export const MonthlyChart = ({ data }: MonthlyChartProps) => {
             }}
             cursor={{ fill: '#f3f4f6' }}
           />
-          <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} name="Applications" />
+          <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} name={t('dashboard.charts.applications')} />
         </BarChart>
       </ResponsiveContainer>
     </Card>

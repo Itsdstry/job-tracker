@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
 import { Select } from '../../../components/ui/Select';
 import { Textarea } from '../../../components/ui/Textarea';
 import { Application, ApplicationFormData, ApplicationStatus } from '../../../types';
-import { ALL_STATUSES, STATUS_LABELS } from '../../../utils';
+import { ALL_STATUSES } from '../../../utils';
 
 interface ApplicationFormProps {
   initialData?: Application;
@@ -23,11 +24,12 @@ const defaultForm: ApplicationFormData = {
   status: 'Applied',
 };
 
-const statusOptions = ALL_STATUSES.map((s) => ({ value: s, label: STATUS_LABELS[s] }));
-
 export const ApplicationForm = ({ initialData, onSubmit, onCancel, isLoading }: ApplicationFormProps) => {
+  const { t } = useTranslation();
   const [form, setForm] = useState<ApplicationFormData>(defaultForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const statusOptions = ALL_STATUSES.map((s) => ({ value: s, label: t(`status.${s}`) }));
 
   useEffect(() => {
     if (initialData) {
@@ -45,9 +47,9 @@ export const ApplicationForm = ({ initialData, onSubmit, onCancel, isLoading }: 
 
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!form.company.trim()) errs.company = 'Company is required';
-    if (!form.position.trim()) errs.position = 'Position is required';
-    if (form.salary && isNaN(parseFloat(form.salary))) errs.salary = 'Invalid salary';
+    if (!form.company.trim()) errs.company = t('applicationForm.errors.companyRequired');
+    if (!form.position.trim()) errs.position = t('applicationForm.errors.positionRequired');
+    if (form.salary && isNaN(parseFloat(form.salary))) errs.salary = t('applicationForm.errors.invalidSalary');
     return errs;
   };
 
@@ -66,27 +68,27 @@ export const ApplicationForm = ({ initialData, onSubmit, onCancel, isLoading }: 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Input label="Company *" placeholder="Google" value={form.company} onChange={set('company')} error={errors.company} />
-        <Input label="Position *" placeholder="Software Engineer" value={form.position} onChange={set('position')} error={errors.position} />
+        <Input label={`${t('applicationForm.company')} *`} placeholder={t('applicationForm.placeholders.company')} value={form.company} onChange={set('company')} error={errors.company} />
+        <Input label={`${t('applicationForm.position')} *`} placeholder={t('applicationForm.placeholders.position')} value={form.position} onChange={set('position')} error={errors.position} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Input label="Salary (USD)" type="number" placeholder="75000" value={form.salary} onChange={set('salary')} error={errors.salary} />
-        <Input label="Location" placeholder="Remote / NYC" value={form.location} onChange={set('location')} />
+        <Input label={t('applicationForm.salary')} type="number" placeholder={t('applicationForm.placeholders.salary')} value={form.salary} onChange={set('salary')} error={errors.salary} />
+        <Input label={t('applicationForm.location')} placeholder={t('applicationForm.placeholders.location')} value={form.location} onChange={set('location')} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Input label="Application Date" type="date" value={form.applicationDate} onChange={set('applicationDate')} />
+        <Input label={t('applicationForm.applicationDate')} type="date" value={form.applicationDate} onChange={set('applicationDate')} />
         <Select
-          label="Status"
+          label={t('applicationForm.status')}
           options={statusOptions}
           value={form.status}
           onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as ApplicationStatus }))}
         />
       </div>
-      <Textarea label="Notes" placeholder="Interview notes, contacts, next steps..." value={form.notes} onChange={set('notes')} />
+      <Textarea label={t('applicationForm.notes')} placeholder={t('applicationForm.placeholders.notes')} value={form.notes} onChange={set('notes')} />
       <div className="flex justify-end gap-3 pt-2">
-        <Button type="button" variant="secondary" onClick={onCancel}>Cancel</Button>
+        <Button type="button" variant="secondary" onClick={onCancel}>{t('common.cancel')}</Button>
         <Button type="submit" isLoading={isLoading}>
-          {initialData ? 'Save Changes' : 'Add Application'}
+          {initialData ? t('applicationForm.saveChanges') : t('applicationForm.addApplication')}
         </Button>
       </div>
     </form>

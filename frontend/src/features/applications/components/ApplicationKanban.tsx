@@ -1,17 +1,14 @@
 import { useMemo, useState } from 'react';
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { useUpdateApplication } from '../hooks/useApplications';
 import { Application, ApplicationStatus } from '../../../types';
 import { formatDate, formatSalary } from '../../../utils';
 
-const columns: Array<{ key: ApplicationStatus; title: string; description: string }> = [
-  { key: 'Applied', title: 'Applied', description: 'Fresh opportunities' },
-  { key: 'Interview', title: 'Interview', description: 'In discussion' },
-  { key: 'TechnicalTest', title: 'Technical Test', description: 'Assessments' },
-  { key: 'Offer', title: 'Offer', description: 'Positive signals' },
-  { key: 'Rejected', title: 'Rejected', description: 'Closed loses' },
-];
+type ColumnKey = ApplicationStatus;
+
+const columnKeys: ColumnKey[] = ['Applied', 'Interview', 'TechnicalTest', 'Offer', 'Rejected'];
 
 interface ApplicationKanbanProps {
   applications: Application[];
@@ -19,13 +16,22 @@ interface ApplicationKanbanProps {
 }
 
 export const ApplicationKanban = ({ applications, isLoading }: ApplicationKanbanProps) => {
+  const { t } = useTranslation();
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<ApplicationStatus | null>(null);
   const updateMutation = useUpdateApplication();
 
+  const columns = [
+    { key: 'Applied' as ColumnKey, title: t('applications.kanban.applied'), description: t('applications.kanban.appliedDesc') },
+    { key: 'Interview' as ColumnKey, title: t('applications.kanban.interview'), description: t('applications.kanban.interviewDesc') },
+    { key: 'TechnicalTest' as ColumnKey, title: t('applications.kanban.technicalTest'), description: t('applications.kanban.technicalTestDesc') },
+    { key: 'Offer' as ColumnKey, title: t('applications.kanban.offer'), description: t('applications.kanban.offerDesc') },
+    { key: 'Rejected' as ColumnKey, title: t('applications.kanban.rejected'), description: t('applications.kanban.rejectedDesc') },
+  ];
+
   const groupedApplications = useMemo(() => {
-    return columns.reduce((acc, column) => {
-      acc[column.key] = applications.filter((application) => application.status === column.key);
+    return columnKeys.reduce((acc, key) => {
+      acc[key] = applications.filter((app) => app.status === key);
       return acc;
     }, {} as Record<ApplicationStatus, Application[]>);
   }, [applications]);
@@ -33,7 +39,7 @@ export const ApplicationKanban = ({ applications, isLoading }: ApplicationKanban
   const handleDrop = (status: ApplicationStatus) => {
     if (!draggedId) return;
 
-    const targetApplication = applications.find((application) => application.id === draggedId);
+    const targetApplication = applications.find((app) => app.id === draggedId);
     if (!targetApplication || targetApplication.status === status) {
       setDraggedId(null);
       setDragOverColumn(null);
@@ -55,8 +61,8 @@ export const ApplicationKanban = ({ applications, isLoading }: ApplicationKanban
   if (isLoading) {
     return (
       <div className="grid gap-4 xl:grid-cols-5">
-        {columns.map((column) => (
-          <div key={column.key} className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        {columnKeys.map((key) => (
+          <div key={key} className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <div className="mb-4 h-5 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
             <div className="space-y-3">
               {Array.from({ length: 3 }).map((_, index) => (
@@ -98,7 +104,7 @@ export const ApplicationKanban = ({ applications, isLoading }: ApplicationKanban
           <div className="flex-1 space-y-3">
             {groupedApplications[column.key].length === 0 ? (
               <div className="flex h-24 items-center justify-center rounded-xl border border-dashed border-gray-200 bg-white/70 text-center text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800/70 dark:text-gray-400">
-                Drop here
+                {t('applications.kanban.dropHere')}
               </div>
             ) : (
               groupedApplications[column.key].map((application) => (
@@ -118,7 +124,7 @@ export const ApplicationKanban = ({ applications, isLoading }: ApplicationKanban
                   </div>
 
                   <div className="mt-3 space-y-1 text-xs text-gray-500 dark:text-gray-400">
-                    <p>Applied {formatDate(application.applicationDate)}</p>
+                    <p>{t('applications.appliedOn', { date: formatDate(application.applicationDate) })}</p>
                     {application.location && <p>{application.location}</p>}
                     {application.salary ? <p>{formatSalary(application.salary)}</p> : null}
                   </div>

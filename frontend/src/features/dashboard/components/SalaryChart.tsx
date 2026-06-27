@@ -7,6 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 import { SalaryData } from '../../../types';
 import { Card } from '../../../components/ui/Card';
 
@@ -15,10 +16,12 @@ interface SalaryChartProps {
 }
 
 export const SalaryChart = ({ data }: SalaryChartProps) => {
+  const { t } = useTranslation();
+
   return (
     <Card>
       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">
-        Salary Distribution
+        {t('dashboard.charts.salary')}
       </h3>
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
@@ -34,7 +37,7 @@ export const SalaryChart = ({ data }: SalaryChartProps) => {
             }}
             cursor={{ fill: '#f3f4f6' }}
           />
-          <Bar dataKey="count" fill="#10b981" radius={[4, 4, 0, 0]} name="Applications" />
+          <Bar dataKey="count" fill="#10b981" radius={[4, 4, 0, 0]} name={t('dashboard.charts.applications')} />
         </BarChart>
       </ResponsiveContainer>
     </Card>
