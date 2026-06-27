@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
@@ -9,15 +10,16 @@ import { authService } from '../../../services/auth.service';
 export const RegisterForm = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!form.name || form.name.length < 2) errs.name = 'Name must be at least 2 characters';
-    if (!form.email) errs.email = 'Email is required';
-    if (!form.password || form.password.length < 8) errs.password = 'Password must be at least 8 characters';
+    if (!form.name || form.name.length < 2) errs.name = t('auth.register.errors.nameMin');
+    if (!form.email) errs.email = t('auth.register.errors.emailInvalid');
+    if (!form.password || form.password.length < 8) errs.password = t('auth.register.errors.passwordMin');
     return errs;
   };
 
@@ -30,7 +32,7 @@ export const RegisterForm = () => {
     try {
       const data = await authService.register(form);
       login(data.accessToken, data.refreshToken, data.user);
-      toast.success('Account created! Welcome aboard.');
+      toast.success(t('auth.register.created'));
       navigate('/dashboard');
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Registration failed');
@@ -42,7 +44,7 @@ export const RegisterForm = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Full Name"
+        label={t('auth.register.fullName')}
         type="text"
         placeholder="John Doe"
         value={form.name}
@@ -51,7 +53,7 @@ export const RegisterForm = () => {
         autoComplete="name"
       />
       <Input
-        label="Email"
+        label={t('auth.register.email')}
         type="email"
         placeholder="you@example.com"
         value={form.email}
@@ -60,22 +62,22 @@ export const RegisterForm = () => {
         autoComplete="email"
       />
       <Input
-        label="Password"
+        label={t('auth.register.password')}
         type="password"
-        placeholder="Min. 8 characters"
+        placeholder={t('auth.register.passwordHint')}
         value={form.password}
         onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
         error={errors.password}
         autoComplete="new-password"
-        hint="At least 8 characters"
+        hint={t('auth.register.passwordHint')}
       />
       <Button type="submit" className="w-full" size="lg" isLoading={isLoading}>
-        Create Account
+        {t('auth.register.createAccount')}
       </Button>
       <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-        Already have an account?{' '}
+        {t('auth.register.hasAccount')}{' '}
         <Link to="/login" className="text-primary-600 hover:underline font-medium">
-          Sign in
+          {t('auth.register.signIn')}
         </Link>
       </p>
     </form>

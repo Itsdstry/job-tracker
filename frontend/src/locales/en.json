@@ -30,7 +30,9 @@
       "signIn": "Sign In",
       "noAccount": "Don't have an account?",
       "signUp": "Sign up",
-      "welcome": "Welcome back, {{name}}!"
+      "welcome": "Welcome back, {{name}}!",
+      "emailRequired": "Email is required",
+      "passwordRequired": "Password is required"
     },
     "register": {
       "title": "Create your free account",

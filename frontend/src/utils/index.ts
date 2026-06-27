@@ -1,17 +1,17 @@
 import { ApplicationStatus } from '../types';
 
-export const formatDate = (date: string): string => {
-  return new Date(date).toLocaleDateString('en-US', {
+export const formatDate = (date: string, locale?: string): string => {
+  return new Date(date).toLocaleDateString(locale, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
   });
 };
 
-export const formatMonth = (month: string): string => {
+export const formatMonth = (month: string, locale?: string): string => {
   const [year, m] = month.split('-');
   const date = new Date(Number(year), Number(m) - 1);
-  return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+  return date.toLocaleDateString(locale, { month: 'short', year: '2-digit' });
 };
 
 export const formatSalary = (salary: number | null): string => {
@@ -21,14 +21,6 @@ export const formatSalary = (salary: number | null): string => {
     currency: 'USD',
     maximumFractionDigits: 0,
   }).format(salary);
-};
-
-export const STATUS_LABELS: Record<ApplicationStatus, string> = {
-  Applied: 'Applied',
-  Interview: 'Interview',
-  TechnicalTest: 'Technical Test',
-  Offer: 'Offer',
-  Rejected: 'Rejected',
 };
 
 export const STATUS_COLORS: Record<ApplicationStatus, string> = {

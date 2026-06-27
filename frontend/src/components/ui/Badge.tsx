@@ -1,6 +1,7 @@
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { ApplicationStatus } from '../../types';
-import { STATUS_COLORS, STATUS_LABELS } from '../../utils';
+import { STATUS_COLORS } from '../../utils';
 
 interface BadgeProps {
   status: ApplicationStatus;
@@ -8,6 +9,7 @@ interface BadgeProps {
 }
 
 export const Badge = ({ status, className }: BadgeProps) => {
+  const { t } = useTranslation();
   return (
     <span
       className={clsx(
@@ -16,7 +18,7 @@ export const Badge = ({ status, className }: BadgeProps) => {
         className
       )}
     >
-      {STATUS_LABELS[status]}
+      {t(`status.${status}`)}
     </span>
   );
 };

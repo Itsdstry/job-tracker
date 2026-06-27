@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
@@ -9,14 +10,15 @@ import { authService } from '../../../services/auth.service';
 export const LoginForm = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!form.email) errs.email = 'Email is required';
-    if (!form.password) errs.password = 'Password is required';
+    if (!form.email) errs.email = t('auth.login.emailRequired');
+    if (!form.password) errs.password = t('auth.login.passwordRequired');
     return errs;
   };
 
@@ -29,7 +31,7 @@ export const LoginForm = () => {
     try {
       const data = await authService.login(form);
       login(data.accessToken, data.refreshToken, data.user);
-      toast.success(`Welcome back, ${data.user.name}!`);
+      toast.success(t('auth.login.welcome', { name: data.user.name }));
       navigate('/dashboard');
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Login failed');
@@ -41,7 +43,7 @@ export const LoginForm = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Email"
+        label={t('auth.login.email')}
         type="email"
         placeholder="you@example.com"
         value={form.email}
@@ -50,7 +52,7 @@ export const LoginForm = () => {
         autoComplete="email"
       />
       <Input
-        label="Password"
+        label={t('auth.login.password')}
         type="password"
         placeholder="••••••••"
         value={form.password}
@@ -60,16 +62,16 @@ export const LoginForm = () => {
       />
       <div className="flex items-center justify-end">
         <Link to="/forgot-password" className="text-xs text-primary-600 hover:underline">
-          Forgot password?
+          {t('auth.login.forgotPassword')}
         </Link>
       </div>
       <Button type="submit" className="w-full" size="lg" isLoading={isLoading}>
-        Sign In
+        {t('auth.login.signIn')}
       </Button>
       <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-        Don't have an account?{' '}
+        {t('auth.login.noAccount')}{' '}
         <Link to="/register" className="text-primary-600 hover:underline font-medium">
-          Sign up
+          {t('auth.login.signUp')}
         </Link>
       </p>
     </form>

@@ -30,7 +30,9 @@
       "signIn": "Iniciar sesión",
       "noAccount": "¿No tienes cuenta?",
       "signUp": "Regístrate",
-      "welcome": "¡Bienvenido de nuevo, {{name}}!"
+      "welcome": "¡Bienvenido de nuevo, {{name}}!",
+      "emailRequired": "El correo es obligatorio",
+      "passwordRequired": "La contraseña es obligatoria"
     },
     "register": {
       "title": "Crea tu cuenta gratuita",
