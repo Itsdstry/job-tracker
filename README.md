@@ -1,4 +1,4 @@
-# Job Tracker Pro
+# Job Tracker
 
 A full-stack job application tracker built with React, TypeScript, and Node.js. Track applications through a Kanban board, visualize progress with charts, and manage the full hiring pipeline in one place.
 
@@ -27,7 +27,7 @@ A full-stack job application tracker built with React, TypeScript, and Node.js. 
 ## Project Structure
 
 ```
-job-tracker-pro/
+job-tracker/
 ├── frontend/
 │   ├── src/
 │   │   ├── features/          # Feature-colocated components, hooks, services
