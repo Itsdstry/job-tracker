@@ -16,6 +16,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "applications": "Applications",
+    "jobs": "Job Search",
     "profile": "Profile",
     "logout": "Logout",
     "toggleTheme": "Toggle theme",
@@ -148,7 +149,9 @@
       "offerDesc": "Positive signals",
       "rejected": "Rejected",
       "rejectedDesc": "Closed losses",
-      "dropHere": "Drop here"
+      "dropHere": "Drop here",
+      "viewPosting": "View job posting",
+      "followUp": "Follow up"
     },
     "empty": {
       "noResults": "No results match your filters",
@@ -161,6 +164,19 @@
     },
     "appliedOn": "Applied {{date}}"
   },
+  "jobs": {
+    "label": "JOB SEARCH",
+    "title": "Find your next opportunity",
+    "description": "Search remote jobs from Remotive, jump to your favourite job boards, and add listings directly to your tracker.",
+    "portals": "Quick links to job boards",
+    "searchPlaceholder": "React developer, Product Manager...",
+    "allCategories": "All categories",
+    "viewPosting": "View posting",
+    "addToTracker": "Add to tracker",
+    "error": "Could not load jobs. The Remotive API may be temporarily unavailable — try again in a moment.",
+    "noResults": "No jobs found. Try a different keyword or category.",
+    "resultsFrom": "{{count}} remote jobs from Remotive"
+  },
   "applicationForm": {
     "newTitle": "New Application",
     "editTitle": "Edit Application",
@@ -170,12 +186,14 @@
     "location": "Location",
     "applicationDate": "Application Date",
     "status": "Status",
+    "url": "Job Posting URL",
     "notes": "Notes",
     "placeholders": {
       "company": "Google",
       "position": "Software Engineer",
       "salary": "75000",
       "location": "Remote / NYC",
+      "url": "https://linkedin.com/jobs/...",
       "notes": "Interview notes, contacts, next steps..."
     },
     "addApplication": "Add Application",
@@ -191,6 +209,7 @@
     "salary": "Salary",
     "applied": "Applied",
     "added": "Added",
+    "url": "Job Posting",
     "notes": "Notes",
     "deleteConfirm": "Are you sure you want to delete this application? This action cannot be undone.",
     "deleted": "Application deleted",

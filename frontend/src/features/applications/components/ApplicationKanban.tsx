@@ -15,6 +15,13 @@ interface ApplicationKanbanProps {
   isLoading: boolean;
 }
 
+const FOLLOWUP_DAYS = 7;
+const needsFollowUp = (app: Application) => {
+  if (app.status !== 'Applied') return false;
+  const daysSinceUpdate = (Date.now() - new Date(app.updatedAt).getTime()) / (1000 * 60 * 60 * 24);
+  return daysSinceUpdate > FOLLOWUP_DAYS;
+};
+
 export const ApplicationKanban = ({ applications, isLoading }: ApplicationKanbanProps) => {
   const { t } = useTranslation();
   const [draggedId, setDraggedId] = useState<string | null>(null);
@@ -118,11 +125,37 @@ export const ApplicationKanban = ({ applications, isLoading }: ApplicationKanban
                     draggedId === application.id && 'opacity-40 scale-95'
                   )}
                 >
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{application.company}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{application.position}</p>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{application.company}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{application.position}</p>
+                    </div>
+                    {application.url && (
+                      <a
+                        href={application.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex-shrink-0 rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-gray-700 dark:hover:text-primary-400"
+                        title={t('applications.kanban.viewPosting')}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
+                    )}
                   </div>
 
+                  {needsFollowUp(application) && (
+                    <div className="mt-2">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {t('applications.kanban.followUp')}
+                      </span>
+                    </div>
+                  )}
                   <div className="mt-3 space-y-1 text-xs text-gray-500 dark:text-gray-400">
                     <p>{t('applications.appliedOn', { date: formatDate(application.applicationDate) })}</p>
                     {application.location && <p>{application.location}</p>}

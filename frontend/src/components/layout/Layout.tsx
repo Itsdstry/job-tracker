@@ -6,6 +6,7 @@ import { Navbar } from './Navbar';
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard': 'Dashboard',
   '/applications': 'Applications',
+  '/jobs': 'Job Search',
   '/profile': 'Profile',
 };
 

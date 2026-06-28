@@ -53,6 +53,7 @@ model Application {
   salary          Float?
   location        String?
   notes           String?
+  url             String?
   applicationDate DateTime          @default(now())
   status          ApplicationStatus @default(Applied)
   createdAt       DateTime          @default(now())

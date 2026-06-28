@@ -16,6 +16,7 @@
   "nav": {
     "dashboard": "Inicio",
     "applications": "Candidaturas",
+    "jobs": "Buscar empleo",
     "profile": "Perfil",
     "logout": "Cerrar sesión",
     "toggleTheme": "Cambiar tema",
@@ -148,7 +149,9 @@
       "offerDesc": "Señales positivas",
       "rejected": "Rechazado",
       "rejectedDesc": "Cerradas",
-      "dropHere": "Soltar aquí"
+      "dropHere": "Soltar aquí",
+      "viewPosting": "Ver oferta de empleo",
+      "followUp": "Hacer seguimiento"
     },
     "empty": {
       "noResults": "No hay resultados para tus filtros",
@@ -161,6 +164,19 @@
     },
     "appliedOn": "Aplicado {{date}}"
   },
+  "jobs": {
+    "label": "BUSCAR EMPLEO",
+    "title": "Encuentra tu próxima oportunidad",
+    "description": "Busca empleos remotos en Remotive, accede a tus bolsas de trabajo favoritas y añade ofertas directamente a tu tracker.",
+    "portals": "Accesos rápidos a portales de empleo",
+    "searchPlaceholder": "Desarrollador React, Product Manager...",
+    "allCategories": "Todas las categorías",
+    "viewPosting": "Ver oferta",
+    "addToTracker": "Añadir al tracker",
+    "error": "No se pudieron cargar las ofertas. La API de Remotive puede estar temporalmente no disponible — inténtalo de nuevo en un momento.",
+    "noResults": "No se encontraron ofertas. Prueba con otra palabra clave o categoría.",
+    "resultsFrom": "{{count}} empleos remotos de Remotive"
+  },
   "applicationForm": {
     "newTitle": "Nueva candidatura",
     "editTitle": "Editar candidatura",
@@ -170,12 +186,14 @@
     "location": "Ubicación",
     "applicationDate": "Fecha de candidatura",
     "status": "Estado",
+    "url": "URL de la oferta",
     "notes": "Notas",
     "placeholders": {
       "company": "Google",
       "position": "Ingeniero de software",
       "salary": "75000",
       "location": "Remoto / Madrid",
+      "url": "https://linkedin.com/jobs/...",
       "notes": "Notas de entrevista, contactos, próximos pasos..."
     },
     "addApplication": "Añadir candidatura",
@@ -191,6 +209,7 @@
     "salary": "Salario",
     "applied": "Aplicado",
     "added": "Añadido",
+    "url": "Oferta de empleo",
     "notes": "Notas",
     "deleteConfirm": "¿Seguro que quieres eliminar esta candidatura? Esta acción no se puede deshacer.",
     "deleted": "Candidatura eliminada",

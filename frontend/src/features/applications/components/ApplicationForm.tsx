@@ -19,6 +19,7 @@ const defaultForm: ApplicationFormData = {
   position: '',
   salary: '',
   location: '',
+  url: '',
   notes: '',
   applicationDate: new Date().toISOString().split('T')[0],
   status: 'Applied',
@@ -39,6 +40,7 @@ export const ApplicationForm = ({ initialData, onSubmit, onCancel, isLoading }: 
         salary: initialData.salary?.toString() || '',
         location: initialData.location || '',
         notes: initialData.notes || '',
+        url: initialData.url || '',
         applicationDate: initialData.applicationDate.split('T')[0],
         status: initialData.status,
       });
@@ -84,6 +86,7 @@ export const ApplicationForm = ({ initialData, onSubmit, onCancel, isLoading }: 
           onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as ApplicationStatus }))}
         />
       </div>
+      <Input label={t('applicationForm.url')} type="url" placeholder={t('applicationForm.placeholders.url')} value={form.url} onChange={set('url')} />
       <Textarea label={t('applicationForm.notes')} placeholder={t('applicationForm.placeholders.notes')} value={form.notes} onChange={set('notes')} />
       <div className="flex justify-end gap-3 pt-2">
         <Button type="button" variant="secondary" onClick={onCancel}>{t('common.cancel')}</Button>

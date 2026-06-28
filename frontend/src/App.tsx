@@ -12,6 +12,7 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
+import { Jobs } from './pages/Jobs';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -58,6 +59,10 @@ const AppRoutes = () => (
     <Route
       path="/applications/:id"
       element={<ProtectedRoute><Layout><ApplicationDetail /></Layout></ProtectedRoute>}
+    />
+    <Route
+      path="/jobs"
+      element={<ProtectedRoute><Layout><Jobs /></Layout></ProtectedRoute>}
     />
     <Route
       path="/profile"

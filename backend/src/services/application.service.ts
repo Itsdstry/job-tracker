@@ -7,6 +7,7 @@ export interface CreateApplicationDto {
   salary?: number;
   location?: string;
   notes?: string;
+  url?: string;
   applicationDate?: string;
   status?: ApplicationStatus;
 }
@@ -109,7 +110,7 @@ export const exportApplications = async (userId: string, query: ListApplications
     },
   });
 
-  const headers = ['Company', 'Position', 'Status', 'Salary', 'Location', 'Application Date', 'Notes', 'Created At'];
+  const headers = ['Company', 'Position', 'Status', 'Salary', 'Location', 'URL', 'Application Date', 'Notes', 'Created At'];
   const escapeCsvValue = (value: string | number | null | undefined) => {
     const normalized = value === null || value === undefined ? '' : String(value);
     return `"${normalized.replace(/"/g, '""')}"`;
@@ -121,6 +122,7 @@ export const exportApplications = async (userId: string, query: ListApplications
     application.status,
     application.salary ?? '',
     application.location ?? '',
+    (application as any).url ?? '',
     application.applicationDate.toISOString(),
     application.notes ?? '',
     application.createdAt.toISOString(),

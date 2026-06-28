@@ -20,6 +20,7 @@ export interface Application {
   salary: number | null;
   location: string | null;
   notes: string | null;
+  url: string | null;
   applicationDate: string;
   status: ApplicationStatus;
   createdAt: string;
@@ -94,6 +95,7 @@ export interface ApplicationFormData {
   salary: string;
   location: string;
   notes: string;
+  url: string;
   applicationDate: string;
   status: ApplicationStatus;
 }
