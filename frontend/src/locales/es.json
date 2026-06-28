@@ -185,7 +185,23 @@
     "error": "No se pudieron cargar las ofertas. La API de Remotive puede estar temporalmente no disponible — inténtalo de nuevo en un momento.",
     "noResults": "No se encontraron ofertas. Prueba con otra palabra clave, categoría o región.",
     "resultsFrom": "{{count}} empleos remotos de Remotive",
-    "resultsFiltered": "{{count}} de {{total}} empleos coinciden con la región seleccionada"
+    "resultsFiltered": "{{count}} de {{total}} empleos coinciden con la región seleccionada",
+    "tabs": {
+      "remote": "Empleos remotos",
+      "nearby": "Cerca de mí"
+    },
+    "nearby": {
+      "permissionPrompt": "Permite el acceso a tu ubicación para encontrar empleos cerca de ti.",
+      "requestLocation": "Usar mi ubicación",
+      "locating": "Obteniendo tu ubicación...",
+      "denied": "Se denegó el acceso a la ubicación. Actívalo en los ajustes de tu navegador.",
+      "retry": "Intentar de nuevo",
+      "locationGranted": "Ubicación: {{lat}}, {{lon}}",
+      "updateLocation": "Actualizar",
+      "searchPlaceholder": "Desarrollador, Diseñador, Manager...",
+      "resultsFrom": "{{count}} empleos en un radio de {{radius}} km",
+      "error": "No se pudieron cargar los empleos cercanos. Inténtalo de nuevo."
+    }
   },
   "applicationForm": {
     "newTitle": "Nueva candidatura",

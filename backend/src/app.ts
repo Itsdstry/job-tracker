@@ -8,6 +8,7 @@ import logger from './utils/logger';
 import authRoutes from './routes/auth.routes';
 import applicationRoutes from './routes/application.routes';
 import dashboardRoutes from './routes/dashboard.routes';
+import jobsRoutes from './routes/jobs.routes';
 import { errorHandler, notFound } from './middlewares/error.middleware';
 
 const app = express();
@@ -50,6 +51,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/jobs', jobsRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

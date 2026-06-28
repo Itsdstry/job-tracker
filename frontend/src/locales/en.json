@@ -185,7 +185,23 @@
     "error": "Could not load jobs. The Remotive API may be temporarily unavailable — try again in a moment.",
     "noResults": "No jobs found. Try a different keyword, category or region.",
     "resultsFrom": "{{count}} remote jobs from Remotive",
-    "resultsFiltered": "{{count}} of {{total}} jobs match the selected region"
+    "resultsFiltered": "{{count}} of {{total}} jobs match the selected region",
+    "tabs": {
+      "remote": "Remote jobs",
+      "nearby": "Near me"
+    },
+    "nearby": {
+      "permissionPrompt": "Allow location access to find jobs near you.",
+      "requestLocation": "Use my location",
+      "locating": "Getting your location...",
+      "denied": "Location access was denied. Please enable it in your browser settings.",
+      "retry": "Try again",
+      "locationGranted": "Location: {{lat}}, {{lon}}",
+      "updateLocation": "Update",
+      "searchPlaceholder": "Developer, Designer, Manager...",
+      "resultsFrom": "{{count}} jobs within {{radius}} km",
+      "error": "Could not load nearby jobs. Please try again."
+    }
   },
   "applicationForm": {
     "newTitle": "New Application",
