@@ -52,14 +52,14 @@ export const Dashboard = () => {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-indigo-100">{t('dashboard.label')}</p>
-            <h2 className="mt-2 text-3xl font-semibold">
+            <h2 className="mt-2 text-2xl sm:text-3xl font-semibold">
               {t('dashboard.welcome', { name: user?.name?.split(' ')[0] || 'there' })}
             </h2>
             <p className="mt-3 text-sm text-indigo-100 sm:text-base">
               {t('dashboard.description')}
             </p>
           </div>
-          <Link to="/applications" className="inline-flex items-center justify-center rounded-full bg-white/15 px-4 py-2 font-medium text-white backdrop-blur transition hover:bg-white/25">
+          <Link to="/applications" className="inline-flex items-center justify-center rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white backdrop-blur transition hover:bg-white/25 self-start sm:self-auto">
             {t('dashboard.trackApplications')}
           </Link>
         </div>

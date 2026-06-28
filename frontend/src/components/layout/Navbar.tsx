@@ -35,7 +35,7 @@ export const Navbar = ({ sidebarWidth, title, onMenuToggle, isMobileView, onOpen
             </svg>
           </button>
         )}
-        <h1 className="truncate text-base font-semibold text-gray-900 dark:text-white sm:text-lg">
+        <h1 className="truncate text-base font-semibold text-gray-900 dark:text-white sm:text-lg max-w-[140px] sm:max-w-none">
           {title}
         </h1>
       </div>

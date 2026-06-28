@@ -42,14 +42,14 @@ export const KPICard = ({ title, value, icon, color, subtitle }: KPICardProps) =
   const colors = COLOR_MAP[color];
 
   return (
-    <Card className="flex items-center gap-4">
-      <div className={clsx('w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0', colors.bg)}>
+    <Card className="flex items-center gap-3 sm:gap-4">
+      <div className={clsx('w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0', colors.bg)}>
         <span className={colors.icon}>{icon}</span>
       </div>
-      <div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">{title}</p>
-        <p className={clsx('text-2xl font-bold', colors.value)}>{value}</p>
-        {subtitle && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{subtitle}</p>}
+      <div className="min-w-0">
+        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium truncate">{title}</p>
+        <p className={clsx('text-xl sm:text-2xl font-bold', colors.value)}>{value}</p>
+        {subtitle && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 truncate">{subtitle}</p>}
       </div>
     </Card>
   );

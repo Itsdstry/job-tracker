@@ -128,14 +128,14 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleSkip} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl shadow-2xl">
+      <div className="relative w-full sm:max-w-md overflow-hidden rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[92dvh] flex flex-col">
         {/* Gradient background */}
-        <div className="bg-gradient-to-br from-primary-600 via-indigo-600 to-violet-700 p-8 pb-6">
+        <div className="bg-gradient-to-br from-primary-600 via-indigo-600 to-violet-700 p-6 sm:p-8 pb-5 sm:pb-6 overflow-y-auto">
           {/* Skip button */}
           {!isLast && (
             <button
@@ -160,7 +160,7 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
           </div>
 
           {/* Illustration */}
-          <div className="mb-6 min-h-[140px] flex items-center justify-center">
+          <div className="mb-4 sm:mb-6 min-h-[100px] sm:min-h-[140px] flex items-center justify-center">
             <slide.Illustration />
           </div>
 

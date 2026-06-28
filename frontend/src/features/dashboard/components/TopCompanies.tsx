@@ -21,7 +21,7 @@ export const TopCompanies = ({ data }: TopCompaniesProps) => {
         <div className="space-y-3">
           {data.map((item) => (
             <div key={item.company}>
-              <div className="flex justify-between text-sm mb-1">
+              <div className="flex justify-between text-xs sm:text-sm mb-1">
                 <span className="text-gray-700 dark:text-gray-300 font-medium truncate">{item.company}</span>
                 <span className="text-gray-500 dark:text-gray-400 ml-2 flex-shrink-0">
                   {item.count} {item.count === 1 ? t('dashboard.charts.app') : t('dashboard.charts.apps')}

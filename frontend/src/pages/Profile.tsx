@@ -48,19 +48,19 @@ export const Profile = () => {
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Profile overview */}
       <Card>
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-full flex items-center justify-center text-xl font-bold">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-full flex items-center justify-center text-xl font-bold">
             {profile ? getInitials(profile.name) : '?'}
           </div>
-          <div>
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">{profile?.name}</h2>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">{profile?.email}</p>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">{profile?.name}</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-sm truncate">{profile?.email}</p>
             <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">
               {t('profile.memberSince', { date: profile ? formatDate(profile.createdAt) : '—' })}
             </p>
           </div>
-          <div className="ml-auto text-right">
-            <p className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+          <div className="shrink-0 text-right">
+            <p className="text-xl sm:text-2xl font-bold text-primary-600 dark:text-primary-400">
               {profile?._count?.applications ?? 0}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">{t('nav.applications')}</p>

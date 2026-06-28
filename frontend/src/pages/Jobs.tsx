@@ -295,8 +295,8 @@ export const Jobs = () => {
       {/* ── Remote tab ──────────────────────────────────────────────────────── */}
       {tab === 'remote' && (
         <>
-          <form onSubmit={handleRemoteSearch} className="flex flex-col gap-3 sm:flex-row">
-            <div className="relative flex-1">
+          <form onSubmit={handleRemoteSearch} className="flex flex-col gap-3">
+            <div className="relative">
               <svg className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -308,31 +308,33 @@ export const Jobs = () => {
                 className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
               />
             </div>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
-            >
-              <option value="">{t('jobs.allCategories')}</option>
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
-            <select
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
-              className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
-            >
-              {REGION_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{t(o.labelKey)}</option>
-              ))}
-            </select>
-            <button
-              type="submit"
-              className="rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
-            >
-              {t('common.search')}
-            </button>
+            <div className="flex flex-wrap gap-2">
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="flex-1 min-w-[140px] rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+              >
+                <option value="">{t('jobs.allCategories')}</option>
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+              <select
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+                className="flex-1 min-w-[140px] rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+              >
+                {REGION_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>{t(o.labelKey)}</option>
+                ))}
+              </select>
+              <button
+                type="submit"
+                className="rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+              >
+                {t('common.search')}
+              </button>
+            </div>
           </form>
 
           {remoteLoading && (
@@ -446,8 +448,8 @@ export const Jobs = () => {
               </div>
 
               {/* Search form */}
-              <form onSubmit={handleNearbySearch} className="flex flex-col gap-3 sm:flex-row">
-                <div className="relative flex-1">
+              <form onSubmit={handleNearbySearch} className="flex flex-col gap-3">
+                <div className="relative">
                   <svg className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
@@ -459,29 +461,31 @@ export const Jobs = () => {
                     className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
                   />
                 </div>
-                {/* Radius chips */}
-                <div className="flex gap-1">
-                  {RADIUS_OPTIONS.map((r) => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => setRadius(r)}
-                      className={`rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-                        radius === r
-                          ? 'bg-primary-600 text-white'
-                          : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                      }`}
-                    >
-                      {r}km
-                    </button>
-                  ))}
+                <div className="flex flex-wrap gap-2">
+                  {/* Radius chips */}
+                  <div className="flex gap-1 flex-wrap">
+                    {RADIUS_OPTIONS.map((r) => (
+                      <button
+                        key={r}
+                        type="button"
+                        onClick={() => setRadius(r)}
+                        className={`rounded-lg px-3 py-2.5 text-sm font-medium transition ${
+                          radius === r
+                            ? 'bg-primary-600 text-white'
+                            : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                        }`}
+                      >
+                        {r}km
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="submit"
+                    className="ml-auto rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+                  >
+                    {t('common.search')}
+                  </button>
                 </div>
-                <button
-                  type="submit"
-                  className="rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
-                >
-                  {t('common.search')}
-                </button>
               </form>
 
               {/* Results */}

@@ -141,13 +141,13 @@ export const Applications = () => {
             options={statusOptions}
             value={status}
             onChange={(e) => { setStatus(e.target.value as ApplicationStatus | ''); setPage(1); }}
-            className="w-36"
+            className="w-32 sm:w-36"
           />
           <Select
             options={sortOptions}
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="w-36"
+            className="w-32 sm:w-36"
           />
           <Button variant="secondary" size="md" onClick={toggleOrder} title={order === 'asc' ? t('applications.sort.descending') : t('applications.sort.ascending')}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -158,7 +158,7 @@ export const Applications = () => {
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v12m0 0l-4-4m4 4l4-4m-8 8h8" />
             </svg>
-            {t('common.export')}
+            <span className="hidden sm:inline">{t('common.export')}</span>
           </Button>
         </div>
       </div>
