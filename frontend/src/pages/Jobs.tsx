@@ -44,40 +44,34 @@ const JOB_PORTALS = [
   {
     name: 'LinkedIn',
     icon: 'https://www.linkedin.com/favicon.ico',
-    color: 'bg-blue-600',
     getUrl: (q: string) =>
       `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(q)}&f_WT=2`,
   },
   {
     name: 'Indeed',
     icon: 'https://indeed.com/favicon.ico',
-    color: 'bg-indigo-600',
     getUrl: (q: string) => `https://www.indeed.com/jobs?q=${encodeURIComponent(q)}&remotejob=1`,
   },
   {
     name: 'InfoJobs',
     icon: 'https://www.infojobs.net/favicon.ico',
-    color: 'bg-emerald-600',
     getUrl: (q: string) =>
       `https://www.infojobs.net/jobsearch/search-results/list.xhtml?keyword=${encodeURIComponent(q)}`,
   },
   {
     name: 'Glassdoor',
     icon: 'https://www.glassdoor.com/favicon.ico',
-    color: 'bg-green-500',
     getUrl: (q: string) =>
       `https://www.glassdoor.com/Job/jobs.htm?sc.keyword=${encodeURIComponent(q)}&remoteWorkType=1`,
   },
   {
     name: 'Remoteok',
     icon: 'https://remoteok.com/favicon.ico',
-    color: 'bg-gray-800',
     getUrl: (q: string) => `https://remoteok.com/remote-${encodeURIComponent(q.replace(/ /g, '-'))}-jobs`,
   },
   {
     name: 'Wellfound',
     icon: 'https://wellfound.com/favicon.ico',
-    color: 'bg-orange-500',
     getUrl: (q: string) =>
       `https://wellfound.com/jobs?role=${encodeURIComponent(q)}`,
   },
@@ -93,11 +87,11 @@ const fetchJobs = async (search: string, category: string): Promise<RemotiveJob[
   return data.jobs as RemotiveJob[];
 };
 
-const matchesRegion = (job: RemotiveJob, region: string): boolean => {
+export const matchesRegion = (job: RemotiveJob, region: string): boolean => {
   if (!region) return true;
   const option = REGION_OPTIONS.find((o) => o.value === region);
   if (!option || option.match.length === 0) return true;
-  const loc = job.candidate_required_location.toLowerCase();
+  const loc = (job.candidate_required_location ?? '').toLowerCase();
   if (!loc) return region === 'worldwide';
   return option.match.some((keyword) => loc.includes(keyword));
 };

@@ -5,7 +5,7 @@ import logger from '../utils/logger';
 
 const STALE_DAYS = 7;
 
-const sendFollowUpReminders = async () => {
+export const sendFollowUpReminders = async () => {
   const threshold = new Date();
   threshold.setDate(threshold.getDate() - STALE_DAYS);
 
