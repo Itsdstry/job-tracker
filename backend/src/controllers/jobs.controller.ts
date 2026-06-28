@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Prisma } from '@prisma/client';
 import { searchNearby } from '../services/adzuna.service';
 import { prisma } from '../prisma/client';
 import { sendSuccess, sendError } from '../utils/response';
@@ -8,7 +9,7 @@ export const getCachedJobs = async (req: Request, res: Response): Promise<void> 
   const category = (req.query.category as string) || '';
   const region = (req.query.region as string) || '';
 
-  const where: Record<string, unknown> = {};
+  const where: Prisma.RemotiveCacheWhereInput = {};
 
   if (q) {
     where.OR = [

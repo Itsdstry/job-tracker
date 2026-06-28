@@ -31,6 +31,20 @@ export const createApplication = async (userId: string, dto: CreateApplicationDt
   });
 };
 
+const VALID_SORT_FIELDS = ['applicationDate', 'company', 'position', 'createdAt', 'salary'];
+
+const buildWhere = (userId: string, status?: ApplicationStatus, search?: string): Prisma.ApplicationWhereInput => ({
+  userId,
+  ...(status && { status }),
+  ...(search && {
+    OR: [
+      { company: { contains: search, mode: 'insensitive' } },
+      { position: { contains: search, mode: 'insensitive' } },
+      { location: { contains: search, mode: 'insensitive' } },
+    ],
+  }),
+});
+
 export const listApplications = async (userId: string, query: ListApplicationsQuery) => {
   const {
     status,
@@ -41,20 +55,8 @@ export const listApplications = async (userId: string, query: ListApplicationsQu
     limit = 20,
   } = query;
 
-  const where: Prisma.ApplicationWhereInput = {
-    userId,
-    ...(status && { status }),
-    ...(search && {
-      OR: [
-        { company: { contains: search, mode: 'insensitive' } },
-        { position: { contains: search, mode: 'insensitive' } },
-        { location: { contains: search, mode: 'insensitive' } },
-      ],
-    }),
-  };
-
-  const validSortFields = ['applicationDate', 'company', 'position', 'createdAt', 'salary'];
-  const orderByField = validSortFields.includes(sortBy) ? sortBy : 'createdAt';
+  const where = buildWhere(userId, status, search);
+  const orderByField = VALID_SORT_FIELDS.includes(sortBy) ? sortBy : 'createdAt';
 
   const [applications, total] = await Promise.all([
     prisma.application.findMany({
@@ -80,20 +82,8 @@ export const listApplications = async (userId: string, query: ListApplicationsQu
 export const exportApplications = async (userId: string, query: ListApplicationsQuery) => {
   const { status, search, sortBy = 'createdAt', order = 'desc' } = query;
 
-  const where: Prisma.ApplicationWhereInput = {
-    userId,
-    ...(status && { status }),
-    ...(search && {
-      OR: [
-        { company: { contains: search, mode: 'insensitive' } },
-        { position: { contains: search, mode: 'insensitive' } },
-        { location: { contains: search, mode: 'insensitive' } },
-      ],
-    }),
-  };
-
-  const validSortFields = ['applicationDate', 'company', 'position', 'createdAt', 'salary'];
-  const orderByField = validSortFields.includes(sortBy) ? sortBy : 'createdAt';
+  const where = buildWhere(userId, status, search);
+  const orderByField = VALID_SORT_FIELDS.includes(sortBy) ? sortBy : 'createdAt';
 
   const applications = await prisma.application.findMany({
     where,
