@@ -76,3 +76,21 @@ enum ApplicationStatus {
   Offer
   Rejected
 }
+
+model RemotiveCache {
+  id          String   @id @default(cuid())
+  remotiveId  Int      @unique
+  title       String
+  company     String
+  category    String
+  jobType     String
+  location    String
+  salary      String
+  url         String
+  publishedAt DateTime
+  syncedAt    DateTime @default(now()) @updatedAt
+
+  @@index([category])
+  @@index([syncedAt])
+  @@map("remotive_cache")
+}

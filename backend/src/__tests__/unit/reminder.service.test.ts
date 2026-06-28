@@ -8,7 +8,6 @@ jest.mock('../../utils/mail', () => ({
 
 const NOW = new Date('2024-04-10T09:00:00Z');
 const EIGHT_DAYS_AGO = new Date('2024-04-02T09:00:00Z');
-const THREE_DAYS_AGO = new Date('2024-04-07T09:00:00Z');
 
 beforeEach(() => {
   jest.useFakeTimers();
