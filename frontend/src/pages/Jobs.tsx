@@ -4,9 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Modal } from '../components/ui/Modal';
 import { ApplicationForm } from '../features/applications/components/ApplicationForm';
 import { useCreateApplication } from '../features/applications/hooks/useApplications';
-import { useGeolocation } from '../hooks/useGeolocation';
-import { api } from '../services/api';
-import { Application, ApplicationFormData, ApiResponse } from '../types';
+import { Application, ApplicationFormData } from '../types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -23,19 +21,7 @@ interface RemotiveJob {
   tags: string[];
 }
 
-interface NearbyJob {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  url: string;
-  salaryMin: number | null;
-  salaryMax: number | null;
-  created: string;
-  category: string;
-}
-
-type Tab = 'remote' | 'nearby';
+type Tab = 'remote' | 'spain';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -60,7 +46,50 @@ const REGION_OPTIONS = [
   { value: 'asia', labelKey: 'jobs.regions.asia', match: ['asia', 'pacific', 'apac', 'australia', 'india', 'japan', 'singapore', 'china'] },
 ] as const;
 
-const RADIUS_OPTIONS = [1, 5, 25, 50] as const;
+const SPAIN_PORTALS = [
+  {
+    name: 'LinkedIn España',
+    icon: 'https://www.linkedin.com/favicon.ico',
+    description: 'jobs.spain.linkedinDesc',
+    color: 'from-blue-600 to-blue-700',
+    getUrl: (q: string) => `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(q || 'desarrollador')}&location=Espa%C3%B1a`,
+  },
+  {
+    name: 'InfoJobs',
+    icon: 'https://www.infojobs.net/favicon.ico',
+    description: 'jobs.spain.infojobsDesc',
+    color: 'from-green-600 to-green-700',
+    getUrl: (q: string) => `https://www.infojobs.net/jobsearch/search-results/list.xhtml?keyword=${encodeURIComponent(q || 'programador')}`,
+  },
+  {
+    name: 'Indeed España',
+    icon: 'https://indeed.com/favicon.ico',
+    description: 'jobs.spain.indeedDesc',
+    color: 'from-indigo-600 to-indigo-700',
+    getUrl: (q: string) => `https://es.indeed.com/jobs?q=${encodeURIComponent(q || 'desarrollador')}&l=Espa%C3%B1a`,
+  },
+  {
+    name: 'Tecnoempleo',
+    icon: 'https://www.tecnoempleo.com/favicon.ico',
+    description: 'jobs.spain.tecnoempleoDesc',
+    color: 'from-orange-500 to-orange-600',
+    getUrl: (q: string) => `https://www.tecnoempleo.com/busqueda-empleo.php?te=${encodeURIComponent(q || 'desarrollador')}`,
+  },
+  {
+    name: 'Manfred',
+    icon: 'https://www.getmanfred.com/favicon.ico',
+    description: 'jobs.spain.manfredDesc',
+    color: 'from-violet-600 to-violet-700',
+    getUrl: (q: string) => `https://www.getmanfred.com/ofertas-empleo?q=${encodeURIComponent(q || '')}`,
+  },
+  {
+    name: 'Computrabajo',
+    icon: 'https://www.computrabajo.es/favicon.ico',
+    description: 'jobs.spain.computrabajoDesc',
+    color: 'from-red-500 to-red-600',
+    getUrl: (q: string) => `https://www.computrabajo.es/ofertas-de-trabajo/?q=${encodeURIComponent(q || 'programador')}`,
+  },
+] as const;
 
 const JOB_PORTALS = [
   {
@@ -98,29 +127,14 @@ const JOB_PORTALS = [
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const fetchRemoteJobs = async (search: string, category: string): Promise<RemotiveJob[]> => {
-  const params = new URLSearchParams({ limit: '50' });
+  const params = new URLSearchParams();
   if (search) params.set('search', search);
   if (category) params.set('category', category);
-  const res = await fetch(`https://remotive.com/api/remote-jobs?${params}`);
-  if (!res.ok) throw new Error('Failed to fetch jobs');
+  const url = `https://remotive.com/api/remote-jobs${params.toString() ? `?${params}` : ''}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Remotive API error');
   const data = await res.json();
-  return data.jobs as RemotiveJob[];
-};
-
-const fetchNearbyJobs = async (
-  lat: number,
-  lon: number,
-  radius: number,
-  q: string,
-): Promise<NearbyJob[]> => {
-  const params = new URLSearchParams({
-    lat: String(lat),
-    lon: String(lon),
-    radius: String(radius),
-  });
-  if (q) params.set('q', q);
-  const res = await api.get<ApiResponse<NearbyJob[]>>(`/jobs/nearby?${params}`);
-  return res.data.data;
+  return data.jobs ?? [];
 };
 
 export const matchesRegion = (job: RemotiveJob, region: string): boolean => {
@@ -132,56 +146,24 @@ export const matchesRegion = (job: RemotiveJob, region: string): boolean => {
   return option.match.some((keyword) => loc.includes(keyword));
 };
 
-const formatSalary = (min: number | null, max: number | null): string | null => {
-  if (!min && !max) return null;
-  if (min && max) return `${(min / 1000).toFixed(0)}k–${(max / 1000).toFixed(0)}k €`;
-  if (min) return `desde ${(min / 1000).toFixed(0)}k €`;
-  return `hasta ${(max! / 1000).toFixed(0)}k €`;
-};
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export const Jobs = () => {
   const { t } = useTranslation();
-  const geo = useGeolocation();
   const createMutation = useCreateApplication();
 
-  // Remote tab state
   const [tab, setTab] = useState<Tab>('remote');
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [region, setRegion] = useState('');
   const [submitted, setSubmitted] = useState({ search: '', category: '' });
+  const [addingJob, setAddingJob] = useState<RemotiveJob | null>(null);
 
-  // Nearby tab state
-  const [nearbySearch, setNearbySearch] = useState('');
-  const [radius, setRadius] = useState<number>(25);
-  const [nearbySubmitted, setNearbySubmitted] = useState<{
-    lat: number; lon: number; radius: number; q: string;
-  } | null>(null);
-
-  const [addingRemotive, setAddingRemotive] = useState<RemotiveJob | null>(null);
-  const [addingNearby, setAddingNearby] = useState<NearbyJob | null>(null);
-
-  // ── Queries ────────────────────────────────────────────────────────────────
+  // ── Query ──────────────────────────────────────────────────────────────────
 
   const { data: remoteJobs, isLoading: remoteLoading, isError: remoteError } = useQuery({
     queryKey: ['remotive-jobs', submitted.search, submitted.category],
     queryFn: () => fetchRemoteJobs(submitted.search, submitted.category),
-    staleTime: 5 * 60_000,
-    retry: 1,
-  });
-
-  const { data: nearbyJobs, isLoading: nearbyLoading, isError: nearbyError } = useQuery({
-    queryKey: ['nearby-jobs', nearbySubmitted],
-    queryFn: () =>
-      fetchNearbyJobs(
-        nearbySubmitted!.lat,
-        nearbySubmitted!.lon,
-        nearbySubmitted!.radius,
-        nearbySubmitted!.q,
-      ),
-    enabled: !!nearbySubmitted,
     staleTime: 5 * 60_000,
     retry: 1,
   });
@@ -198,36 +180,17 @@ export const Jobs = () => {
     setSubmitted({ search, category });
   };
 
-  const handleNearbySearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (geo.status !== 'granted') return;
-    setNearbySubmitted({ lat: geo.lat, lon: geo.lon, radius, q: nearbySearch });
-  };
-
   const handleAdd = (data: ApplicationFormData) => {
-    createMutation.mutate(data, { onSuccess: () => { setAddingRemotive(null); setAddingNearby(null); } });
+    createMutation.mutate(data, { onSuccess: () => setAddingJob(null) });
   };
 
-  const remotiveToApplication = (job: RemotiveJob): Application => ({
+  const jobToApplication = (job: RemotiveJob): Application => ({
     id: '', userId: '',
     company: job.company_name,
     position: job.title,
     location: job.candidate_required_location || null,
     url: job.url,
     salary: null, notes: null, status: 'Applied',
-    applicationDate: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  });
-
-  const nearbyToApplication = (job: NearbyJob): Application => ({
-    id: '', userId: '',
-    company: job.company,
-    position: job.title,
-    location: job.location || null,
-    url: job.url,
-    salary: job.salaryMin ?? null,
-    notes: null, status: 'Applied',
     applicationDate: new Date().toISOString(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -281,14 +244,14 @@ export const Jobs = () => {
           🌐 {t('jobs.tabs.remote')}
         </button>
         <button
-          onClick={() => setTab('nearby')}
+          onClick={() => setTab('spain')}
           className={`flex-1 rounded-lg py-2 text-sm font-medium transition ${
-            tab === 'nearby'
+            tab === 'spain'
               ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
           }`}
         >
-          📍 {t('jobs.tabs.nearby')}
+          🇪🇸 {t('jobs.tabs.spain')}
         </button>
       </div>
 
@@ -392,7 +355,7 @@ export const Jobs = () => {
                       <a href={job.url} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700">
                         {t('jobs.viewPosting')}
                       </a>
-                      <button onClick={() => setAddingRemotive(job)} className="rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-primary-700">
+                      <button onClick={() => setAddingJob(job)} className="rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-primary-700">
                         + {t('jobs.addToTracker')}
                       </button>
                     </div>
@@ -404,179 +367,69 @@ export const Jobs = () => {
         </>
       )}
 
-      {/* ── Nearby tab ──────────────────────────────────────────────────────── */}
-      {tab === 'nearby' && (
+      {/* ── Spain tab ───────────────────────────────────────────────────────── */}
+      {tab === 'spain' && (
         <div className="space-y-4">
-          {/* Geolocation button */}
-          {geo.status === 'idle' && (
-            <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center dark:border-gray-600 dark:bg-gray-800">
-              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">{t('jobs.nearby.permissionPrompt')}</p>
-              <button
-                onClick={geo.request}
-                className="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-700"
+          {/* Search input for Spain portals */}
+          <div className="relative">
+            <svg className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t('jobs.spain.searchPlaceholder')}
+              className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+            />
+          </div>
+
+          <p className="text-xs text-gray-500 dark:text-gray-400">{t('jobs.spain.hint')}</p>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {SPAIN_PORTALS.map((portal) => (
+              <a
+                key={portal.name}
+                href={portal.getUrl(search)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-primary-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-primary-600"
               >
-                📍 {t('jobs.nearby.requestLocation')}
-              </button>
-            </div>
-          )}
-
-          {geo.status === 'loading' && (
-            <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800">
-              <div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-4 border-primary-600 border-t-transparent" />
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('jobs.nearby.locating')}</p>
-            </div>
-          )}
-
-          {geo.status === 'denied' && (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-center dark:border-amber-800 dark:bg-amber-950/20">
-              <p className="text-sm text-amber-700 dark:text-amber-300">{t('jobs.nearby.denied')}</p>
-              <button onClick={geo.request} className="mt-3 text-xs font-medium text-primary-600 underline dark:text-primary-400">
-                {t('jobs.nearby.retry')}
-              </button>
-            </div>
-          )}
-
-          {geo.status === 'granted' && (
-            <>
-              {/* Location confirmed */}
-              <div className="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-700 dark:border-green-800 dark:bg-green-950/20 dark:text-green-300">
-                <span>📍</span>
-                <span>{t('jobs.nearby.locationGranted', { lat: geo.lat.toFixed(4), lon: geo.lon.toFixed(4) })}</span>
-                <button onClick={geo.request} className="ml-auto text-xs underline opacity-70 hover:opacity-100">
-                  {t('jobs.nearby.updateLocation')}
-                </button>
-              </div>
-
-              {/* Search form */}
-              <form onSubmit={handleNearbySearch} className="flex flex-col gap-3">
-                <div className="relative">
-                  <svg className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                  <input
-                    type="text"
-                    value={nearbySearch}
-                    onChange={(e) => setNearbySearch(e.target.value)}
-                    placeholder={t('jobs.nearby.searchPlaceholder')}
-                    className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
-                  />
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {/* Radius chips */}
-                  <div className="flex gap-1 flex-wrap">
-                    {RADIUS_OPTIONS.map((r) => (
-                      <button
-                        key={r}
-                        type="button"
-                        onClick={() => setRadius(r)}
-                        className={`rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-                          radius === r
-                            ? 'bg-primary-600 text-white'
-                            : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                        }`}
-                      >
-                        {r}km
-                      </button>
-                    ))}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className={`flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br ${portal.color}`}>
+                      <img
+                        src={portal.icon}
+                        alt={portal.name}
+                        className="h-5 w-5 rounded-sm brightness-[10]"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                    </div>
+                    <span className="font-semibold text-gray-900 dark:text-white">{portal.name}</span>
                   </div>
-                  <button
-                    type="submit"
-                    className="ml-auto rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
-                  >
-                    {t('common.search')}
-                  </button>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 transition group-hover:text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
                 </div>
-              </form>
-
-              {/* Results */}
-              {nearbyLoading && (
-                <div className="space-y-3">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="h-24 animate-pulse rounded-2xl bg-gray-100 dark:bg-gray-800" />
-                  ))}
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                  {t(portal.description)}
+                </p>
+                <div className="mt-auto rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300 text-center">
+                  {search ? t('jobs.spain.searchFor', { q: search }) : t('jobs.spain.browse')}
                 </div>
-              )}
-
-              {nearbyError && (
-                <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-600 dark:border-red-800 dark:bg-red-950/20 dark:text-red-400">
-                  {t('jobs.nearby.error')}
-                </div>
-              )}
-
-              {nearbyJobs && nearbyJobs.length === 0 && (
-                <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center dark:border-gray-700 dark:bg-gray-800">
-                  <p className="text-gray-500 dark:text-gray-400">{t('jobs.noResults')}</p>
-                </div>
-              )}
-
-              {nearbyJobs && nearbyJobs.length > 0 && (
-                <div className="space-y-3">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {t('jobs.nearby.resultsFrom', { count: nearbyJobs.length, radius })}
-                  </p>
-                  {nearbyJobs.map((job) => {
-                    const salary = formatSalary(job.salaryMin, job.salaryMax);
-                    return (
-                      <div key={job.id} className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-primary-200 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-primary-700">
-                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                          <div className="min-w-0 flex-1">
-                            <p className="font-semibold text-gray-900 dark:text-white">{job.title}</p>
-                            <p className="mt-0.5 text-sm text-gray-600 dark:text-gray-400">{job.company}</p>
-                            <div className="mt-2 flex flex-wrap gap-2">
-                              {job.location && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-                                  📍 {job.location}
-                                </span>
-                              )}
-                              {job.category && (
-                                <span className="inline-flex items-center rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300">
-                                  {job.category}
-                                </span>
-                              )}
-                              {salary && (
-                                <span className="inline-flex items-center rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-300">
-                                  {salary}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex shrink-0 gap-2">
-                            <a href={job.url} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700">
-                              {t('jobs.viewPosting')}
-                            </a>
-                            <button onClick={() => setAddingNearby(job)} className="rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-primary-700">
-                              + {t('jobs.addToTracker')}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </>
-          )}
+              </a>
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Add application modals */}
-      <Modal isOpen={!!addingRemotive} onClose={() => setAddingRemotive(null)} title={t('applicationForm.newTitle')} size="lg">
-        {addingRemotive && (
+      {/* Add application modal */}
+      <Modal isOpen={!!addingJob} onClose={() => setAddingJob(null)} title={t('applicationForm.newTitle')} size="lg">
+        {addingJob && (
           <ApplicationForm
-            initialData={remotiveToApplication(addingRemotive)}
+            initialData={jobToApplication(addingJob)}
             isLoading={createMutation.isPending}
-            onCancel={() => setAddingRemotive(null)}
-            onSubmit={handleAdd}
-          />
-        )}
-      </Modal>
-
-      <Modal isOpen={!!addingNearby} onClose={() => setAddingNearby(null)} title={t('applicationForm.newTitle')} size="lg">
-        {addingNearby && (
-          <ApplicationForm
-            initialData={nearbyToApplication(addingNearby)}
-            isLoading={createMutation.isPending}
-            onCancel={() => setAddingNearby(null)}
+            onCancel={() => setAddingJob(null)}
             onSubmit={handleAdd}
           />
         )}

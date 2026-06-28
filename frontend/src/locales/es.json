@@ -197,7 +197,19 @@
     "resultsFiltered": "{{count}} de {{total}} empleos coinciden con la región seleccionada",
     "tabs": {
       "remote": "Empleos remotos",
-      "nearby": "Cerca de mí"
+      "spain": "Empleos en España"
+    },
+    "spain": {
+      "searchPlaceholder": "Busca por rol, tecnología…",
+      "hint": "Haz clic en un portal para abrir una búsqueda en España. Los enlaces se actualizan con tu búsqueda.",
+      "linkedinDesc": "Miles de ofertas tech y no tech en España. Ideal para networking y ofertas directas de empresa.",
+      "infojobsDesc": "El mayor portal de empleo de España. Perfecto para empresas locales y nacionales.",
+      "indeedDesc": "Agregador global filtrado para España. Genial para descubrir ofertas de todo tipo.",
+      "tecnoempleoDesc": "Portal de empleo tecnológico español. Ideal para roles de IT, desarrollo e ingeniería.",
+      "manfredDesc": "Empleo tech basado en comunidad. Utilizado por las mejores empresas tecnológicas españolas.",
+      "computrabajoDesc": "Gran variedad de roles en todos los sectores en España.",
+      "searchFor": "Buscar '{{q}}'",
+      "browse": "Ver empleos"
     },
     "nearby": {
       "permissionPrompt": "Permite el acceso a tu ubicación para encontrar empleos cerca de ti.",

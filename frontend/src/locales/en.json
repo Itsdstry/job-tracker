@@ -197,7 +197,19 @@
     "resultsFiltered": "{{count}} of {{total}} jobs match the selected region",
     "tabs": {
       "remote": "Remote jobs",
-      "nearby": "Near me"
+      "spain": "Jobs in Spain"
+    },
+    "spain": {
+      "searchPlaceholder": "Search by role, technology…",
+      "hint": "Click a portal to open a pre-filled search in Spain. Links update with your search query.",
+      "linkedinDesc": "Thousands of tech and non-tech jobs in Spain. Best for networking and direct company listings.",
+      "infojobsDesc": "Spain's largest job board. Ideal for local and nationwide Spanish companies.",
+      "indeedDesc": "Global job aggregator filtered for Spain. Great for broad discovery.",
+      "tecnoempleoDesc": "Technology-focused Spanish job board. Perfect for IT, dev, and engineering roles.",
+      "manfredDesc": "Community-driven tech jobs in Spain. Used by top Spanish tech companies.",
+      "computrabajoDesc": "Wide variety of roles across all industries in Spain.",
+      "searchFor": "Search '{{q}}'",
+      "browse": "Browse jobs"
     },
     "nearby": {
       "permissionPrompt": "Allow location access to find jobs near you.",
