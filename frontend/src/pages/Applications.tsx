@@ -49,10 +49,12 @@ export const Applications = () => {
 
   const { data: tableData, isLoading: tableLoading } = useApplications(
     { ...commonParams, page, limit: 20 },
+    viewMode === 'table',
   );
 
   const { data: kanbanData, isLoading: kanbanLoading } = useApplications(
     { ...commonParams, page: 1, limit: 200 },
+    viewMode === 'kanban',
   );
 
   const data = viewMode === 'kanban' ? kanbanData : tableData;

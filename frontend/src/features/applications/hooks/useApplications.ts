@@ -5,10 +5,11 @@ import { ApplicationFormData } from '../../../types';
 
 export const APPLICATIONS_KEY = 'applications';
 
-export const useApplications = (params?: ListParams) => {
+export const useApplications = (params?: ListParams, enabled = true) => {
   return useQuery({
     queryKey: [APPLICATIONS_KEY, params],
     queryFn: () => applicationService.list(params),
+    enabled,
   });
 };
 

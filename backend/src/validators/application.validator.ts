@@ -18,6 +18,11 @@ export const createApplicationValidator = [
     .optional({ nullable: true })
     .trim()
     .isLength({ max: 100 }).withMessage('Location too long'),
+  body('url')
+    .optional({ nullable: true })
+    .trim()
+    .isURL({ protocols: ['http', 'https'], require_protocol: true }).withMessage('URL must be a valid http/https URL')
+    .isLength({ max: 2000 }).withMessage('URL too long'),
   body('notes')
     .optional({ nullable: true })
     .trim()
@@ -46,6 +51,11 @@ export const updateApplicationValidator = [
     .optional({ nullable: true })
     .trim()
     .isLength({ max: 100 }),
+  body('url')
+    .optional({ nullable: true })
+    .trim()
+    .isURL({ protocols: ['http', 'https'], require_protocol: true }).withMessage('URL must be a valid http/https URL')
+    .isLength({ max: 2000 }).withMessage('URL too long'),
   body('notes')
     .optional({ nullable: true })
     .trim()

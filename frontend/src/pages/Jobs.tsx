@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Modal } from '../components/ui/Modal';
 import { ApplicationForm } from '../features/applications/components/ApplicationForm';
 import { useCreateApplication } from '../features/applications/hooks/useApplications';
-import { ApplicationFormData } from '../types';
+import { Application, ApplicationFormData } from '../types';
 
 interface RemotiveJob {
   id: number;
@@ -109,13 +109,19 @@ export const Jobs = () => {
     });
   };
 
-  const getInitialFormData = (job: RemotiveJob): Partial<ApplicationFormData> => ({
+  const jobToApplication = (job: RemotiveJob): Application => ({
+    id: '',
+    userId: '',
     company: job.company_name,
     position: job.title,
-    location: job.candidate_required_location,
+    location: job.candidate_required_location || null,
     url: job.url,
+    salary: null,
+    notes: null,
     status: 'Applied',
-    applicationDate: new Date().toISOString().split('T')[0],
+    applicationDate: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   });
 
   return (
@@ -267,17 +273,7 @@ export const Jobs = () => {
       >
         {addingJob && (
           <ApplicationForm
-            initialData={
-              {
-                id: '',
-                userId: '',
-                createdAt: '',
-                updatedAt: '',
-                salary: null,
-                notes: null,
-                ...getInitialFormData(addingJob),
-              } as any
-            }
+            initialData={jobToApplication(addingJob)}
             isLoading={createMutation.isPending}
             onCancel={() => setAddingJob(null)}
             onSubmit={handleAdd}

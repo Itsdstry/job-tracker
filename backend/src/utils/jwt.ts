@@ -1,7 +1,11 @@
 import jwt from 'jsonwebtoken';
 
-const ACCESS_SECRET = process.env.JWT_SECRET || 'fallback-secret';
-const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret';
+if (process.env.NODE_ENV === 'production' && (!process.env.JWT_SECRET || !process.env.JWT_REFRESH_SECRET)) {
+  throw new Error('JWT_SECRET and JWT_REFRESH_SECRET must be set in production');
+}
+
+const ACCESS_SECRET = process.env.JWT_SECRET || 'fallback-secret-dev-only';
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret-dev-only';
 
 export interface JwtPayload {
   userId: string;
