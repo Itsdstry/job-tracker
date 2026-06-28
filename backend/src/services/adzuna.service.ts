@@ -42,7 +42,7 @@ export const searchNearby = async (
   const url = `${BASE}/${country}/search/1?${params}`;
 
   try {
-    const { data } = await axios.get(url, { timeout: 8_000 });
+    const { data } = await axios.get(url, { timeout: 15_000 });
     return (data.results ?? []).map((r: any): NearbyJob => ({
       id: r.id,
       title: r.title,
@@ -55,7 +55,9 @@ export const searchNearby = async (
       category: r.category?.label ?? '',
     }));
   } catch (err: any) {
-    logger.error({ err: err.message, lat, lon, radiusKm }, 'Adzuna API error');
+    const status = err.response?.status;
+    const body = err.response?.data;
+    logger.error({ message: err.message, status, body, lat, lon, radiusKm }, 'Adzuna API error');
     throw { statusCode: 502, message: 'Failed to fetch jobs from Adzuna' };
   }
 };
