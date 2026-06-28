@@ -228,6 +228,13 @@
       "companyRequired": "Company is required",
       "positionRequired": "Position is required",
       "invalidSalary": "Invalid salary"
+    },
+    "autofill": {
+      "button": "Auto-fill",
+      "noUrl": "Paste a job URL first",
+      "success": "Fields filled from URL",
+      "noData": "Could not extract data from this URL",
+      "error": "Failed to read the URL. The site may block automated requests."
     }
   },
   "applicationDetail": {

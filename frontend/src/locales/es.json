@@ -228,6 +228,13 @@
       "companyRequired": "La empresa es obligatoria",
       "positionRequired": "El puesto es obligatorio",
       "invalidSalary": "Salario inválido"
+    },
+    "autofill": {
+      "button": "Auto-rellenar",
+      "noUrl": "Pega primero una URL de oferta",
+      "success": "Campos rellenados desde la URL",
+      "noData": "No se pudo extraer información de esta URL",
+      "error": "No se pudo leer la URL. El sitio puede bloquear solicitudes automáticas."
     }
   },
   "applicationDetail": {
