@@ -36,14 +36,11 @@ const CATEGORIES = [
   'Customer Support',
 ];
 
+// España: Spain/Europe/worldwide jobs (all accessible from Spain)
+// Europa: explicit European mentions only (stricter)
 const REGION_OPTIONS = [
-  { value: '', labelKey: 'jobs.allRegions', match: [] as string[] },
-  { value: 'worldwide', labelKey: 'jobs.regions.worldwide', match: ['worldwide', 'anywhere', 'global'] },
-  { value: 'europe', labelKey: 'jobs.regions.europe', match: ['europe', 'eu', 'emea', 'spain', 'españa', 'uk', 'germany', 'france', 'portugal', 'netherlands', 'italy'] },
-  { value: 'spain', labelKey: 'jobs.regions.spain', match: ['spain', 'españa'] },
-  { value: 'usa', labelKey: 'jobs.regions.usa', match: ['usa', 'us only', 'us ', 'united states', 'canada', 'north america'] },
-  { value: 'latam', labelKey: 'jobs.regions.latam', match: ['latam', 'latin america', 'south america', 'mexico', 'argentina', 'colombia', 'brazil', 'chile'] },
-  { value: 'asia', labelKey: 'jobs.regions.asia', match: ['asia', 'pacific', 'apac', 'australia', 'india', 'japan', 'singapore', 'china'] },
+  { value: 'spain', labelKey: 'jobs.regions.spain', match: ['spain', 'españa', 'europe', 'eu', 'emea', 'worldwide', 'anywhere', 'global'] },
+  { value: 'europe', labelKey: 'jobs.regions.europe', match: ['europe', 'eu', 'emea'] },
 ] as const;
 
 const SPAIN_PORTALS = [
@@ -138,11 +135,11 @@ const fetchRemoteJobs = async (search: string, category: string): Promise<Remoti
 };
 
 export const matchesRegion = (job: RemotiveJob, region: string): boolean => {
-  if (!region) return true;
   const option = REGION_OPTIONS.find((o) => o.value === region);
-  if (!option || option.match.length === 0) return true;
+  if (!option) return true;
   const loc = (job.candidate_required_location ?? '').toLowerCase();
-  if (!loc) return region === 'worldwide';
+  // Empty location = worldwide remote = accessible from Spain
+  if (!loc) return region === 'spain';
   return option.match.some((keyword) => loc.includes(keyword));
 };
 
@@ -155,7 +152,7 @@ export const Jobs = () => {
   const [tab, setTab] = useState<Tab>('remote');
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
-  const [region, setRegion] = useState('');
+  const [region, setRegion] = useState('spain');
   const [submitted, setSubmitted] = useState({ search: '', category: '' });
   const [addingJob, setAddingJob] = useState<RemotiveJob | null>(null);
 

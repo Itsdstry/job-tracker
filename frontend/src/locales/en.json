@@ -180,14 +180,9 @@
     "portals": "Quick links to job boards",
     "searchPlaceholder": "React developer, Product Manager...",
     "allCategories": "All categories",
-    "allRegions": "All regions",
     "regions": {
-      "worldwide": "Worldwide / Remote",
-      "europe": "Europe",
-      "spain": "Spain",
-      "usa": "USA / Canada",
-      "latam": "Latin America",
-      "asia": "Asia / Pacific"
+      "spain": "🇪🇸 Spain + Worldwide",
+      "europe": "🌍 Europe (remote)"
     },
     "viewPosting": "View posting",
     "addToTracker": "Add to tracker",

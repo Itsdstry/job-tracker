@@ -180,14 +180,9 @@
     "portals": "Accesos rápidos a portales de empleo",
     "searchPlaceholder": "Desarrollador React, Product Manager...",
     "allCategories": "Todas las categorías",
-    "allRegions": "Todas las regiones",
     "regions": {
-      "worldwide": "Global / Remoto",
-      "europe": "Europa",
-      "spain": "España",
-      "usa": "EE.UU. / Canadá",
-      "latam": "Latinoamérica",
-      "asia": "Asia / Pacífico"
+      "spain": "🇪🇸 España + Mundial",
+      "europe": "🌍 Europa (remoto)"
     },
     "viewPosting": "Ver oferta",
     "addToTracker": "Añadir al tracker",
