@@ -36,10 +36,8 @@ const CATEGORIES = [
   'Customer Support',
 ];
 
-// España: Spain/Europe/worldwide jobs (all accessible from Spain)
-// Europa: explicit European mentions only (stricter)
 const REGION_OPTIONS = [
-  { value: 'spain', labelKey: 'jobs.regions.spain', match: ['spain', 'españa', 'europe', 'eu', 'emea', 'worldwide', 'anywhere', 'global'] },
+  { value: 'spain', labelKey: 'jobs.regions.spain', match: ['spain', 'españa'] },
   { value: 'europe', labelKey: 'jobs.regions.europe', match: ['europe', 'eu', 'emea'] },
 ] as const;
 
@@ -138,8 +136,7 @@ export const matchesRegion = (job: RemotiveJob, region: string): boolean => {
   const option = REGION_OPTIONS.find((o) => o.value === region);
   if (!option) return true;
   const loc = (job.candidate_required_location ?? '').toLowerCase();
-  // Empty location = worldwide remote = accessible from Spain
-  if (!loc) return region === 'spain';
+  if (!loc) return false;
   return option.match.some((keyword) => loc.includes(keyword));
 };
 
