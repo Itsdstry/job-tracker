@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Modal } from '../components/ui/Modal';
@@ -29,6 +29,16 @@ const CATEGORIES = [
   'Marketing',
   'Customer Support',
 ];
+
+const REGION_OPTIONS = [
+  { value: '', labelKey: 'jobs.allRegions', match: [] as string[] },
+  { value: 'worldwide', labelKey: 'jobs.regions.worldwide', match: ['worldwide', 'anywhere', 'global'] },
+  { value: 'europe', labelKey: 'jobs.regions.europe', match: ['europe', 'eu', 'emea', 'spain', 'españa', 'uk', 'germany', 'france', 'portugal', 'netherlands', 'italy'] },
+  { value: 'spain', labelKey: 'jobs.regions.spain', match: ['spain', 'españa'] },
+  { value: 'usa', labelKey: 'jobs.regions.usa', match: ['usa', 'us only', 'us ', 'united states', 'canada', 'north america'] },
+  { value: 'latam', labelKey: 'jobs.regions.latam', match: ['latam', 'latin america', 'south america', 'mexico', 'argentina', 'colombia', 'brazil', 'chile'] },
+  { value: 'asia', labelKey: 'jobs.regions.asia', match: ['asia', 'pacific', 'apac', 'australia', 'india', 'japan', 'singapore', 'china'] },
+] as const;
 
 const JOB_PORTALS = [
   {
@@ -74,7 +84,7 @@ const JOB_PORTALS = [
 ];
 
 const fetchJobs = async (search: string, category: string): Promise<RemotiveJob[]> => {
-  const params = new URLSearchParams({ limit: '20' });
+  const params = new URLSearchParams({ limit: '50' });
   if (search) params.set('search', search);
   if (category) params.set('category', category);
   const res = await fetch(`https://remotive.com/api/remote-jobs?${params}`);
@@ -83,10 +93,20 @@ const fetchJobs = async (search: string, category: string): Promise<RemotiveJob[
   return data.jobs as RemotiveJob[];
 };
 
+const matchesRegion = (job: RemotiveJob, region: string): boolean => {
+  if (!region) return true;
+  const option = REGION_OPTIONS.find((o) => o.value === region);
+  if (!option || option.match.length === 0) return true;
+  const loc = job.candidate_required_location.toLowerCase();
+  if (!loc) return region === 'worldwide';
+  return option.match.some((keyword) => loc.includes(keyword));
+};
+
 export const Jobs = () => {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
+  const [region, setRegion] = useState('');
   const [submitted, setSubmitted] = useState({ search: '', category: '' });
   const [addingJob, setAddingJob] = useState<RemotiveJob | null>(null);
   const createMutation = useCreateApplication();
@@ -97,6 +117,11 @@ export const Jobs = () => {
     staleTime: 5 * 60_000,
     retry: 1,
   });
+
+  const filteredJobs = useMemo(
+    () => (jobs ?? []).filter((job) => matchesRegion(job, region)),
+    [jobs, region],
+  );
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -181,6 +206,15 @@ export const Jobs = () => {
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
+        <select
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+          className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+        >
+          {REGION_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>{t(o.labelKey)}</option>
+          ))}
+        </select>
         <button
           type="submit"
           className="rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
@@ -204,18 +238,20 @@ export const Jobs = () => {
         </div>
       )}
 
-      {jobs && jobs.length === 0 && (
+      {jobs && filteredJobs.length === 0 && (
         <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center dark:border-gray-700 dark:bg-gray-800">
           <p className="text-gray-500 dark:text-gray-400">{t('jobs.noResults')}</p>
         </div>
       )}
 
-      {jobs && jobs.length > 0 && (
+      {jobs && filteredJobs.length > 0 && (
         <div className="space-y-3">
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            {t('jobs.resultsFrom', { count: jobs.length })}
+            {region
+              ? t('jobs.resultsFiltered', { count: filteredJobs.length, total: jobs.length })
+              : t('jobs.resultsFrom', { count: jobs.length })}
           </p>
-          {jobs.map((job) => (
+          {filteredJobs.map((job) => (
             <div
               key={job.id}
               className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-primary-200 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-primary-700"

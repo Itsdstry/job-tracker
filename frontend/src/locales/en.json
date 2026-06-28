@@ -171,11 +171,21 @@
     "portals": "Quick links to job boards",
     "searchPlaceholder": "React developer, Product Manager...",
     "allCategories": "All categories",
+    "allRegions": "All regions",
+    "regions": {
+      "worldwide": "Worldwide / Remote",
+      "europe": "Europe",
+      "spain": "Spain",
+      "usa": "USA / Canada",
+      "latam": "Latin America",
+      "asia": "Asia / Pacific"
+    },
     "viewPosting": "View posting",
     "addToTracker": "Add to tracker",
     "error": "Could not load jobs. The Remotive API may be temporarily unavailable — try again in a moment.",
-    "noResults": "No jobs found. Try a different keyword or category.",
-    "resultsFrom": "{{count}} remote jobs from Remotive"
+    "noResults": "No jobs found. Try a different keyword, category or region.",
+    "resultsFrom": "{{count}} remote jobs from Remotive",
+    "resultsFiltered": "{{count}} of {{total}} jobs match the selected region"
   },
   "applicationForm": {
     "newTitle": "New Application",
