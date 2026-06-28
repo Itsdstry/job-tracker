@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Navbar } from './Navbar';
+import { OnboardingModal, shouldShowOnboarding } from '../ui/OnboardingModal';
 
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard': 'Dashboard',
@@ -14,6 +15,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileView, setIsMobileView] = useState(() => window.innerWidth < 1024);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(shouldShowOnboarding);
   const location = useLocation();
 
   const title = PAGE_TITLES[location.pathname] || 'Job Tracker Pro';
@@ -56,6 +58,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         title={title}
         onMenuToggle={() => setIsMobileMenuOpen((open) => !open)}
         isMobileView={isMobileView}
+        onOpenGuide={() => setIsOnboardingOpen(true)}
       />
       <main
         className="min-h-screen pt-16 transition-all duration-300"
@@ -63,6 +66,11 @@ export const Layout = ({ children }: { children: ReactNode }) => {
       >
         <div className="p-4 sm:p-6">{children}</div>
       </main>
+
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onClose={() => setIsOnboardingOpen(false)}
+      />
     </div>
   );
 };

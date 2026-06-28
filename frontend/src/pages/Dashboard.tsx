@@ -32,11 +32,19 @@ const XIcon = () => (
   </svg>
 );
 
+const GETTING_STARTED_STEPS = [
+  { icon: '📝', labelKey: 'dashboard.gettingStarted.step1', href: '/applications' },
+  { icon: '🔍', labelKey: 'dashboard.gettingStarted.step2', href: '/jobs' },
+  { icon: '🔔', labelKey: 'dashboard.gettingStarted.step3', href: '/profile' },
+] as const;
+
 export const Dashboard = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { data: stats, isLoading: statsLoading } = useDashboardStats();
   const { data: charts, isLoading: chartsLoading } = useDashboardCharts();
+
+  const isNewUser = !statsLoading && (stats?.total ?? 0) === 0;
 
   return (
     <div className="space-y-6">
@@ -70,6 +78,42 @@ export const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Getting started card — only for new users */}
+      {isNewUser && (
+        <div className="rounded-2xl border border-primary-200 bg-primary-50 p-6 dark:border-primary-800 dark:bg-primary-950/30">
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary-600 dark:text-primary-400">
+            {t('dashboard.gettingStarted.label')}
+          </p>
+          <h3 className="mt-1 text-lg font-bold text-gray-900 dark:text-white">
+            {t('dashboard.gettingStarted.title')}
+          </h3>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            {t('dashboard.gettingStarted.subtitle')}
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            {GETTING_STARTED_STEPS.map((step, i) => (
+              <Link
+                key={step.href}
+                to={step.href}
+                className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-sm transition hover:shadow-md hover:border-primary-300 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:hover:border-primary-600"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-100 text-lg dark:bg-primary-900/40">
+                  {step.icon}
+                </span>
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 dark:text-gray-500">
+                    {t('dashboard.gettingStarted.stepLabel', { n: i + 1 })}
+                  </p>
+                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                    {t(step.labelKey)}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* KPI Cards */}
       {statsLoading ? (

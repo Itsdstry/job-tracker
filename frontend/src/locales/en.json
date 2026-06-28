@@ -94,6 +94,15 @@
       "description": "Add your first application and your dashboard will come to life with charts, stats, and progress tracking.",
       "button": "Add your first application"
     },
+    "gettingStarted": {
+      "label": "GET STARTED",
+      "title": "3 steps to take control of your job search",
+      "subtitle": "You have no applications yet. Here's how to get the most out of Job Tracker:",
+      "stepLabel": "Step {{n}}",
+      "step1": "Add your first application",
+      "step2": "Browse remote & nearby jobs",
+      "step3": "Enable email follow-up reminders"
+    },
     "charts": {
       "monthly": "Applications Per Month",
       "status": "Status Distribution",
@@ -235,6 +244,31 @@
       "success": "Fields filled from URL",
       "noData": "Could not extract data from this URL",
       "error": "Failed to read the URL. The site may block automated requests."
+    }
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "prev": "Back",
+    "finish": "Get started",
+    "openGuide": "Help & guide",
+    "slides": {
+      "welcome": {
+        "title": "Welcome to Job Tracker Pro",
+        "description": "Your command center for the job hunt. Track every application, find new opportunities, and never miss a follow-up."
+      },
+      "applications": {
+        "title": "Track every application",
+        "description": "Add jobs you apply to and move them through the Kanban board. Paste a job URL and hit Auto-fill to populate the form automatically."
+      },
+      "jobs": {
+        "title": "Find your next opportunity",
+        "description": "Search remote jobs worldwide filtered by region, or switch to Near Me to find roles within 1–50 km of your location using Adzuna."
+      },
+      "dashboard": {
+        "title": "Measure your progress",
+        "description": "Your dashboard shows interview rates, offer stats, and top companies at a glance. Enable email reminders in Profile to get nudged about stale applications."
+      }
     }
   },
   "applicationDetail": {

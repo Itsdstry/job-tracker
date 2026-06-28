@@ -94,6 +94,15 @@
       "description": "Añade tu primera candidatura y el panel cobrará vida con gráficos, estadísticas y seguimiento del progreso.",
       "button": "Añade tu primera candidatura"
     },
+    "gettingStarted": {
+      "label": "EMPIEZA AQUÍ",
+      "title": "3 pasos para dominar tu búsqueda de empleo",
+      "subtitle": "Aún no tienes candidaturas. Así puedes sacar el máximo partido a Job Tracker:",
+      "stepLabel": "Paso {{n}}",
+      "step1": "Añade tu primera candidatura",
+      "step2": "Explora empleos remotos y cerca de ti",
+      "step3": "Activa recordatorios de seguimiento por email"
+    },
     "charts": {
       "monthly": "Candidaturas por mes",
       "status": "Distribución por estado",
@@ -235,6 +244,31 @@
       "success": "Campos rellenados desde la URL",
       "noData": "No se pudo extraer información de esta URL",
       "error": "No se pudo leer la URL. El sitio puede bloquear solicitudes automáticas."
+    }
+  },
+  "onboarding": {
+    "skip": "Omitir",
+    "next": "Siguiente",
+    "prev": "Atrás",
+    "finish": "Empezar",
+    "openGuide": "Ayuda y guía",
+    "slides": {
+      "welcome": {
+        "title": "Bienvenido a Job Tracker Pro",
+        "description": "Tu centro de control para la búsqueda de empleo. Organiza candidaturas, encuentra ofertas y nunca pierdas el seguimiento."
+      },
+      "applications": {
+        "title": "Registra cada candidatura",
+        "description": "Añade las ofertas a las que aplicas y muévelas por el tablero Kanban. Pega la URL de la oferta y pulsa Auto-rellenar para completar el formulario automáticamente."
+      },
+      "jobs": {
+        "title": "Encuentra tu próxima oportunidad",
+        "description": "Busca empleos remotos por región o cambia a Cerca de Mí para encontrar ofertas en un radio de 1 a 50 km usando Adzuna."
+      },
+      "dashboard": {
+        "title": "Mide tu progreso",
+        "description": "El dashboard muestra tu tasa de entrevistas, estadísticas de ofertas y las empresas más frecuentes. Activa recordatorios en Perfil para recibir avisos sobre candidaturas sin respuesta."
+      }
     }
   },
   "applicationDetail": {
