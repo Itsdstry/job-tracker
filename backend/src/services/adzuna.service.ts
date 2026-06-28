@@ -75,8 +75,8 @@ export const searchNearby = async (
   });
   if (query) params.set('what', query);
 
-  // Try gb first (largest dataset), fall back to us
-  const countries = ['gb', 'us'];
+  // Try es first (Spain), then gb and us as fallback
+  const countries = ['es', 'gb', 'us'];
 
   for (const country of countries) {
     try {
