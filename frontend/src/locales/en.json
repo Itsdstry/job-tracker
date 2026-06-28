@@ -100,7 +100,7 @@
       "subtitle": "You have no applications yet. Here's how to get the most out of Job Tracker:",
       "stepLabel": "Step {{n}}",
       "step1": "Add your first application",
-      "step2": "Browse remote & nearby jobs",
+      "step2": "Browse remote jobs and Spain portals",
       "step3": "Enable email follow-up reminders"
     },
     "charts": {
@@ -211,18 +211,6 @@
       "searchFor": "Search '{{q}}'",
       "browse": "Browse jobs"
     },
-    "nearby": {
-      "permissionPrompt": "Allow location access to find jobs near you.",
-      "requestLocation": "Use my location",
-      "locating": "Getting your location...",
-      "denied": "Location access was denied. Please enable it in your browser settings.",
-      "retry": "Try again",
-      "locationGranted": "Location: {{lat}}, {{lon}}",
-      "updateLocation": "Update",
-      "searchPlaceholder": "Developer, Designer, Manager...",
-      "resultsFrom": "{{count}} jobs within {{radius}} km",
-      "error": "Could not load nearby jobs. Please try again."
-    }
   },
   "applicationForm": {
     "newTitle": "New Application",

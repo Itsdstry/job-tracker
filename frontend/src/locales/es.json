@@ -100,7 +100,7 @@
       "subtitle": "Aún no tienes candidaturas. Así puedes sacar el máximo partido a Job Tracker:",
       "stepLabel": "Paso {{n}}",
       "step1": "Añade tu primera candidatura",
-      "step2": "Explora empleos remotos y cerca de ti",
+      "step2": "Explora empleos remotos y portales de España",
       "step3": "Activa recordatorios de seguimiento por email"
     },
     "charts": {
@@ -211,18 +211,6 @@
       "searchFor": "Buscar '{{q}}'",
       "browse": "Ver empleos"
     },
-    "nearby": {
-      "permissionPrompt": "Permite el acceso a tu ubicación para encontrar empleos cerca de ti.",
-      "requestLocation": "Usar mi ubicación",
-      "locating": "Obteniendo tu ubicación...",
-      "denied": "Se denegó el acceso a la ubicación. Actívalo en los ajustes de tu navegador.",
-      "retry": "Intentar de nuevo",
-      "locationGranted": "Ubicación: {{lat}}, {{lon}}",
-      "updateLocation": "Actualizar",
-      "searchPlaceholder": "Desarrollador, Diseñador, Manager...",
-      "resultsFrom": "{{count}} empleos en un radio de {{radius}} km",
-      "error": "No se pudieron cargar los empleos cercanos. Inténtalo de nuevo."
-    }
   },
   "applicationForm": {
     "newTitle": "Nueva candidatura",
