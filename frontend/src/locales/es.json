@@ -236,7 +236,11 @@
     "currentPassword": "Contraseña actual",
     "newPassword": "Nueva contraseña",
     "passwordHint": "Al menos 8 caracteres",
-    "updated": "¡Perfil actualizado!"
+    "updated": "¡Perfil actualizado!",
+    "reminders": {
+      "title": "Recordatorios de seguimiento por email",
+      "description": "Recibe un email diario cuando una candidatura lleve más de 7 días en estado 'Candidatura' sin actualizar."
+    }
   },
   "status": {
     "Applied": "Candidatura",

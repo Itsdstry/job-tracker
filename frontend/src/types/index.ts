@@ -9,6 +9,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  emailReminders: boolean;
   createdAt: string;
   _count?: { applications: number };
 }

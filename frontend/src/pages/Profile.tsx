@@ -130,6 +130,40 @@ export const Profile = () => {
           </div>
         </form>
       </Card>
+
+      {/* Email reminders */}
+      <Card>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              {t('profile.reminders.title')}
+            </h3>
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {t('profile.reminders.description')}
+            </p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={profile?.emailReminders ?? false}
+            onClick={() =>
+              profile &&
+              updateMutation.mutate({ emailReminders: !profile.emailReminders })
+            }
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
+              profile?.emailReminders
+                ? 'bg-primary-600'
+                : 'bg-gray-200 dark:bg-gray-600'
+            }`}
+          >
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform ${
+                profile?.emailReminders ? 'translate-x-5' : 'translate-x-0'
+              }`}
+            />
+          </button>
+        </div>
+      </Card>
     </div>
   );
 };

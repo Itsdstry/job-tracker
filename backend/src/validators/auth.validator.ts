@@ -53,4 +53,7 @@ export const updateProfileValidator = [
   body('newPassword')
     .optional()
     .isLength({ min: 8 }).withMessage('New password must be at least 8 characters'),
+  body('emailReminders')
+    .optional()
+    .isBoolean().withMessage('emailReminders must be a boolean'),
 ];

@@ -236,7 +236,11 @@
     "currentPassword": "Current Password",
     "newPassword": "New Password",
     "passwordHint": "At least 8 characters",
-    "updated": "Profile updated!"
+    "updated": "Profile updated!",
+    "reminders": {
+      "title": "Email follow-up reminders",
+      "description": "Receive a daily email when applications have been in 'Applied' status for 7+ days without an update."
+    }
   },
   "status": {
     "Applied": "Applied",

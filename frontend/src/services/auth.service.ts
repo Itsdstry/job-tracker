@@ -27,7 +27,7 @@ export const authService = {
     return res.data.data;
   },
 
-  updateProfile: async (data: { name?: string; currentPassword?: string; newPassword?: string }) => {
+  updateProfile: async (data: { name?: string; currentPassword?: string; newPassword?: string; emailReminders?: boolean }) => {
     const res = await api.put<ApiResponse<User>>('/auth/profile', data);
     return res.data.data;
   },

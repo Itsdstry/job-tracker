@@ -135,7 +135,7 @@ describe('ApplicationService', () => {
       const csv = await applicationService.exportApplications('user-1', {});
       const lines = csv.split('\n');
 
-      expect(lines[0]).toBe('Company,Position,Status,Salary,Location,Application Date,Notes,Created At');
+      expect(lines[0]).toBe('Company,Position,Status,Salary,Location,URL,Application Date,Notes,Created At');
       expect(lines[1]).toContain('"Acme Corp"');
       expect(lines[1]).toContain('"Software Engineer"');
     });

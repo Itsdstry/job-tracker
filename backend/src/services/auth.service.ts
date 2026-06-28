@@ -20,6 +20,7 @@ export interface UpdateProfileDto {
   name?: string;
   currentPassword?: string;
   newPassword?: string;
+  emailReminders?: boolean;
 }
 
 const SALT_ROUNDS = 12;
@@ -113,6 +114,7 @@ export const getProfile = async (userId: string) => {
       id: true,
       name: true,
       email: true,
+      emailReminders: true,
       createdAt: true,
       _count: { select: { applications: true } },
     },
@@ -125,9 +127,10 @@ export const updateProfile = async (userId: string, dto: UpdateProfileDto) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw { statusCode: 404, message: 'User not found' };
 
-  const updateData: { name?: string; password?: string } = {};
+  const updateData: { name?: string; password?: string; emailReminders?: boolean } = {};
 
   if (dto.name) updateData.name = dto.name;
+  if (typeof dto.emailReminders === 'boolean') updateData.emailReminders = dto.emailReminders;
 
   if (dto.currentPassword && dto.newPassword) {
     const valid = await bcrypt.compare(dto.currentPassword, user.password);
@@ -138,7 +141,7 @@ export const updateProfile = async (userId: string, dto: UpdateProfileDto) => {
   const updated = await prisma.user.update({
     where: { id: userId },
     data: updateData,
-    select: { id: true, name: true, email: true, createdAt: true },
+    select: { id: true, name: true, email: true, emailReminders: true, createdAt: true },
   });
 
   return updated;
