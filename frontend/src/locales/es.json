@@ -101,7 +101,8 @@
       "stepLabel": "Paso {{n}}",
       "step1": "Añade tu primera candidatura",
       "step2": "Explora empleos remotos y portales de España",
-      "step3": "Activa recordatorios de seguimiento por email"
+      "step3": "Activa recordatorios de seguimiento por email",
+      "dismiss": "Omitir"
     },
     "charts": {
       "monthly": "Candidaturas por mes",

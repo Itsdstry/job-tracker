@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDashboardStats, useDashboardCharts } from '../features/dashboard/hooks/useDashboard';
@@ -44,7 +45,17 @@ export const Dashboard = () => {
   const { data: stats, isLoading: statsLoading } = useDashboardStats();
   const { data: charts, isLoading: chartsLoading } = useDashboardCharts();
 
-  const isNewUser = !statsLoading && (stats?.total ?? 0) === 0;
+  const [gsDismissed, setGsDismissed] = useState(
+    () => localStorage.getItem('gettingStartedDismissed') === 'true',
+  );
+
+  const dismissGettingStarted = () => {
+    localStorage.setItem('gettingStartedDismissed', 'true');
+    setGsDismissed(true);
+  };
+
+  const hasApplications = !statsLoading && (stats?.total ?? 0) > 0;
+  const showGettingStarted = !statsLoading && !hasApplications && !gsDismissed;
 
   return (
     <div className="space-y-6">
@@ -79,18 +90,28 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {/* Getting started card — only for new users */}
-      {isNewUser && (
+      {/* Getting started card — hidden once dismissed or after first application */}
+      {showGettingStarted && (
         <div className="rounded-2xl border border-primary-200 bg-primary-50 p-6 dark:border-primary-800 dark:bg-primary-950/30">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary-600 dark:text-primary-400">
-            {t('dashboard.gettingStarted.label')}
-          </p>
-          <h3 className="mt-1 text-lg font-bold text-gray-900 dark:text-white">
-            {t('dashboard.gettingStarted.title')}
-          </h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {t('dashboard.gettingStarted.subtitle')}
-          </p>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-primary-600 dark:text-primary-400">
+                {t('dashboard.gettingStarted.label')}
+              </p>
+              <h3 className="mt-1 text-lg font-bold text-gray-900 dark:text-white">
+                {t('dashboard.gettingStarted.title')}
+              </h3>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {t('dashboard.gettingStarted.subtitle')}
+              </p>
+            </div>
+            <button
+              onClick={dismissGettingStarted}
+              className="shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium text-gray-500 transition hover:bg-primary-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-primary-900/40 dark:hover:text-gray-200"
+            >
+              {t('dashboard.gettingStarted.dismiss')}
+            </button>
+          </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {GETTING_STARTED_STEPS.map((step, i) => (
               <Link

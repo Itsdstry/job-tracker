@@ -101,7 +101,8 @@
       "stepLabel": "Step {{n}}",
       "step1": "Add your first application",
       "step2": "Browse remote jobs and Spain portals",
-      "step3": "Enable email follow-up reminders"
+      "step3": "Enable email follow-up reminders",
+      "dismiss": "Skip"
     },
     "charts": {
       "monthly": "Applications Per Month",
