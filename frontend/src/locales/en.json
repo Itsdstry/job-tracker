@@ -119,7 +119,7 @@
     "label": "APPLICATIONS",
     "title": "Track every opportunity with clarity",
     "description": "Add new applications, refine your shortlist, and keep tabs on interviews and offers from one place.",
-    "addApplication": "+ Add application",
+    "addApplication": "Add application",
     "search": {
       "placeholder": "Search by company, position, location..."
     },

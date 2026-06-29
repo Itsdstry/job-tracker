@@ -119,7 +119,7 @@
     "label": "CANDIDATURAS",
     "title": "Rastrea cada oportunidad con claridad",
     "description": "Añade nuevas candidaturas, refina tu lista y mantén el control de entrevistas y ofertas desde un solo lugar.",
-    "addApplication": "+ Añadir candidatura",
+    "addApplication": "Añadir candidatura",
     "search": {
       "placeholder": "Buscar por empresa, puesto, ubicación..."
     },
