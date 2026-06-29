@@ -90,7 +90,7 @@ export const Applications = () => {
   return (
     <div className="space-y-4">
       <Card className="border-primary-100/70 bg-gradient-to-r from-primary-50 via-white to-indigo-50 dark:from-primary-900/20 dark:via-gray-900 dark:to-indigo-900/20">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-primary-600 dark:text-primary-400">{t('applications.label')}</p>
             <h2 className="mt-1 text-xl font-semibold text-gray-900 dark:text-white">{t('applications.title')}</h2>
